@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.db.base import Base
 from app.db.session import create_db_engine, get_db
 from app.main import app
+from app.models import Meeting
 from app.seed.fixtures import MEETINGS
 from app.seed.seeder import seed_database
 
@@ -57,6 +58,111 @@ def test_list_meetings_returns_seeded_response(client: TestClient) -> None:
     assert set(data) == {"items", "total"}
     assert data["total"] == len(MEETINGS)
     assert len(data["items"]) == len(MEETINGS)
+
+
+def test_get_meeting_detail_returns_nested_ordered_response(
+    client: TestClient,
+) -> None:
+    list_response = client.get(
+        "/api/meetings",
+        params={"sort": "oldest", "limit": 1},
+    )
+    assert list_response.status_code == 200
+    list_item = list_response.json()["items"][0]
+
+    response = client.get(f"/api/meetings/{list_item['id']}")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data) == {
+        "id",
+        "title",
+        "meeting_date",
+        "duration_seconds",
+        "media_url",
+        "source_type",
+        "participants",
+        "summary",
+        "transcript_segments",
+        "action_items",
+        "topics",
+        "chapters",
+    }
+    assert data["id"] == list_item["id"]
+    assert data["title"] == list_item["title"]
+    assert data["participants"]
+    assert data["summary"] is not None
+    assert data["summary"]["overview"]
+
+    transcript_segments = data["transcript_segments"]
+    assert transcript_segments
+    assert [item["sequence_index"] for item in transcript_segments] == sorted(
+        item["sequence_index"] for item in transcript_segments
+    )
+    assert all(item["speaker"] for item in transcript_segments)
+    assert all(item["speaker"]["name"] for item in transcript_segments)
+
+    action_items = data["action_items"]
+    assert action_items
+    assert [item["sequence_index"] for item in action_items] == sorted(
+        item["sequence_index"] for item in action_items
+    )
+    assert any(item["assignee"] for item in action_items)
+    assert all(
+        item["assignee"] is None or item["assignee"]["name"]
+        for item in action_items
+    )
+
+    topics = data["topics"]
+    assert topics
+    assert [item["sequence_index"] for item in topics] == sorted(
+        item["sequence_index"] for item in topics
+    )
+
+    chapters = data["chapters"]
+    assert chapters
+    assert [item["sequence_index"] for item in chapters] == sorted(
+        item["sequence_index"] for item in chapters
+    )
+
+
+def test_get_meeting_detail_allows_missing_summary(
+    client: TestClient,
+    api_engine: Engine,
+) -> None:
+    with Session(api_engine) as session:
+        meeting = Meeting(
+            title="Summary pending",
+            meeting_date=MEETINGS[0].meeting_date,
+            duration_seconds=60,
+            media_url=None,
+            source_type="pasted",
+        )
+        session.add(meeting)
+        session.commit()
+        meeting_id = meeting.id
+
+    response = client.get(f"/api/meetings/{meeting_id}")
+
+    assert response.status_code == 200
+    assert response.json()["summary"] is None
+
+
+def test_get_missing_meeting_returns_404(client: TestClient) -> None:
+    response = client.get("/api/meetings/999999")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Meeting not found"}
+
+
+@pytest.mark.parametrize("meeting_id", ["0", "-1", "abc"])
+def test_invalid_meeting_id_returns_422(
+    client: TestClient,
+    meeting_id: str,
+) -> None:
+    response = client.get(f"/api/meetings/{meeting_id}")
+
+    assert response.status_code == 422
 
 
 def test_default_order_is_newest_first(client: TestClient) -> None:

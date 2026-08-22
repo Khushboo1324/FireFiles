@@ -1,13 +1,17 @@
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from pydantic import BaseModel, Field, field_validator, model_validator
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.schemas.meeting import MeetingListResponse
-from app.services.meeting_service import MeetingSort, list_meetings
+from app.schemas.meeting import MeetingDetailResponse, MeetingListResponse
+from app.services.meeting_service import (
+    MeetingSort,
+    get_meeting_detail,
+    list_meetings,
+)
 
 
 router = APIRouter(prefix="/meetings", tags=["meetings"])
@@ -60,3 +64,21 @@ def get_meetings(
         offset=query.offset,
     )
     return MeetingListResponse(items=meetings, total=total)
+
+
+@router.get(
+    "/{meeting_id}",
+    response_model=MeetingDetailResponse,
+    summary="Get meeting details",
+)
+def get_meeting(
+    meeting_id: Annotated[int, Path(ge=1)],
+    session: Annotated[Session, Depends(get_db)],
+) -> MeetingDetailResponse:
+    meeting = get_meeting_detail(session, meeting_id)
+    if meeting is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Meeting not found",
+        )
+    return MeetingDetailResponse.model_validate(meeting)
