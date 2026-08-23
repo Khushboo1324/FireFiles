@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FireFiles - Product Weekly Sync</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#f3f4f5",
+                      "tertiary-container": "#5f6678",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#f8f9fa",
+                      "secondary": "#585f6c",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#c0c7d6",
+                      "secondary-fixed": "#dce2f3",
+                      "inverse-surface": "#2e3132",
+                      "tertiary-fixed-dim": "#c0c6db",
+                      "on-surface-variant": "#4a4455",
+                      "surface-tint": "#732ee4",
+                      "on-background": "#191c1d",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f1f2",
+                      "inverse-primary": "#d2bbff",
+                      "surface-container-high": "#e7e8e9",
+                      "on-secondary-fixed-variant": "#404754",
+                      "surface-variant": "#e1e3e4",
+                      "primary": "#630ed4",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#eaddff",
+                      "on-secondary-fixed": "#151c27",
+                      "background": "#f8f9fa",
+                      "surface-bright": "#f8f9fa",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#474e60",
+                      "surface-container-highest": "#e1e3e4",
+                      "on-surface": "#191c1d",
+                      "on-tertiary-fixed-variant": "#404758",
+                      "on-tertiary-container": "#dfe5fa",
+                      "on-primary-fixed-variant": "#5a00c6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "outline": "#7b7487",
+                      "tertiary-fixed": "#dce2f7",
+                      "on-primary-container": "#ede0ff",
+                      "secondary-container": "#dce2f3",
+                      "on-primary-fixed": "#25005a",
+                      "primary-container": "#7c3aed",
+                      "surface-dim": "#d9dadb",
+                      "on-secondary-container": "#5e6572",
+                      "primary-fixed-dim": "#d2bbff",
+                      "surface-container": "#edeeef",
+                      "outline-variant": "#ccc3d8",
+                      "on-tertiary-fixed": "#141b2b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "control-height-sm": "28px",
+                      "panel-padding": "16px",
+                      "element-gap": "8px",
+                      "sidebar-width": "240px",
+                      "unit": "4px",
+                      "control-height-md": "32px"
+              },
+              "fontFamily": {
+                      "code": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "code": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "14px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for dense panels */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e1e3e4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0c7d6;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden flex flex-col font-body-sm text-body-sm antialiased">
+<!-- Primary Navigation Rail (SideNavBar) -->
+ 
+<nav class="fixed left-0 top-0 h-[calc(100vh-70px)] w-[54px] bg-surface dark:bg-inverse-surface border-r border-outline-variant dark:border-outline flex flex-col items-center py-4 z-50">
+<div class="flex flex-col gap-4 w-full">
+<a class="flex items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors w-full h-12" href="#" title="Home">
+<button class="text-secondary hover:text-on-surface">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</a>
+<a class="flex items-center justify-center border-l-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed bg-primary-container/10 hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors w-full h-12 opacity-80 duration-150" href="#" title="Meetings">
+<span class="material-symbols-outlined" data-icon="video_chat">video_chat</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors w-full h-12" href="#" title="Insights">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors w-full h-12" href="#" title="Recordings">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</a>
+<a class="flex items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors w-full h-12 mt-auto mb-4" href="#" title="Settings">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Workspace Container -->
+<div class="flex flex-col ml-[54px] w-[calc(100%-54px)] h-[calc(100vh-70px)]">
+<!-- Top App Bar -->
+<header class="h-[52px] border-b border-outline-variant bg-surface flex items-center justify-between px-6 shrink-0 z-40 relative">
+<div class="flex items-center gap-4">
+<div class="flex items-center text-body-sm text-secondary gap-2">
+<a class="hover:text-primary transition-colors" href="#">#My Meetings</a>
+<span class="material-symbols-outlined text-[16px]" data-icon="forward_slash">/</span>
+<span class="text-on-surface font-medium opacity-60">Product Weekly Sync</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="h-[32px] px-4 bg-primary-container text-on-primary-container rounded flex items-center gap-2 hover:bg-primary hover:text-white transition-colors text-label-md font-label-md">
+<span class="material-symbols-outlined text-[16px] fill" data-icon="share">share</span>
+                    Share
+                </button>
+<div class="h-4 w-px bg-outline-variant"></div>
+<button class="w-8 h-8 flex items-center justify-center text-secondary hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-secondary hover:bg-surface-container rounded-full relative">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-sm cursor-pointer ml-2 border border-outline-variant">
+                    AV
+                </div>
+</div>
+</header>
+<!-- Three Column Layout -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Left Panel: Smart Search & Filters -->
+<aside class="w-[300px] border-r border-outline-variant bg-surface-container-lowest flex flex-col h-full shrink-0">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between">
+<h2 class="font-label-md text-label-md text-on-surface font-semibold">Smart Search</h2>
+<button class="text-secondary hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="search">search</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- AI Filters -->
+<section>
+<div class="flex items-center justify-between mb-3 text-secondary">
+<h3 class="font-label-sm text-label-sm uppercase tracking-wider">AI Filters</h3>
+<span class="material-symbols-outlined text-[16px] cursor-pointer" data-icon="expand_less">expand_less</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-between px-3 py-2 bg-surface hover:bg-surface-container-high rounded border border-outline-variant transition-colors text-left">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
+<span class="text-body-sm">Questions</span>
+</div>
+<span class="text-label-sm text-secondary">12</span>
+</button>
+<button class="flex items-center justify-between px-3 py-2 bg-surface hover:bg-surface-container-high rounded border border-outline-variant transition-colors text-left">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+<span class="text-body-sm">Tasks</span>
+</div>
+<span class="text-label-sm text-secondary">8</span>
+</button>
+<button class="flex items-center justify-between px-3 py-2 bg-surface hover:bg-surface-container-high rounded border border-outline-variant transition-colors text-left">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+<span class="text-body-sm">Metrics</span>
+</div>
+<span class="text-label-sm text-secondary">4</span>
+</button>
+</div>
+</section>
+<!-- Sentiments -->
+<section>
+<div class="flex items-center justify-between mb-3 text-secondary">
+<h3 class="font-label-sm text-label-sm uppercase tracking-wider">Sentiments</h3>
+<span class="material-symbols-outlined text-[16px] cursor-pointer" data-icon="expand_less">expand_less</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between px-3 py-2 bg-surface rounded border border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+<span class="text-body-sm">Neutral</span>
+</div>
+<span class="text-label-sm text-secondary">62%</span>
+</div>
+<div class="flex items-center justify-between px-3 py-2 bg-surface rounded border border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+<span class="text-body-sm">Positive</span>
+</div>
+<span class="text-label-sm text-secondary">28%</span>
+</div>
+<div class="flex items-center justify-between px-3 py-2 bg-surface rounded border border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+<span class="text-body-sm">Negative</span>
+</div>
+<span class="text-label-sm text-secondary">10%</span>
+</div>
+</div>
+</section>
+<!-- Speaker Talktime -->
+<section>
+<div class="flex items-center justify-between mb-3 text-secondary">
+<h3 class="font-label-sm text-label-sm uppercase tracking-wider">Speaker Talktime</h3>
+<span class="material-symbols-outlined text-[16px] cursor-pointer" data-icon="expand_less">expand_less</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0">AV</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="truncate font-medium text-body-sm">Amara Voss</span>
+<span class="text-label-sm text-secondary">42%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 42%"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-green-100 text-green-700 flex items-center justify-center font-bold text-xs shrink-0">JR</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="truncate font-medium text-body-sm">Jonah Reed</span>
+<span class="text-label-sm text-secondary">30%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-green-500" style="width: 30%"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0">NC</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="truncate font-medium text-body-sm">Nina Calder</span>
+<span class="text-label-sm text-secondary">15%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-purple-500" style="width: 15%"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-orange-100 text-orange-700 flex items-center justify-center font-bold text-xs shrink-0">DM</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="truncate font-medium text-body-sm">Dev Malik</span>
+<span class="text-label-sm text-secondary">13%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-orange-500" style="width: 13%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</aside>
+<!-- Center Panel: Notes Workspace -->
+<section class="flex-1 bg-surface-container-lowest flex flex-col min-w-0 relative h-full">
+<!-- Workspace Header & Segmented Control -->
+<div class="absolute top-4 left-1/2 -translate-x-1/2 flex items-center bg-surface-container-low rounded-lg p-1 border border-outline-variant z-10">
+<button class="px-6 py-1.5 rounded-md bg-white shadow-sm border border-outline-variant font-label-md text-primary font-bold">Notes</button>
+<button class="px-6 py-1.5 rounded-md text-secondary hover:text-on-surface font-label-md transition-colors">AI Skills <span class="ml-1 text-tertiary-fixed-dim text-[10px]">· 0</span></button>
+</div>
+<div class="flex-1 overflow-y-auto px-16 pt-24 pb-16">
+<div class="max-w-3xl mx-auto">
+<div class="flex items-start justify-between mb-6">
+<div>
+<h1 class="text-2xl font-semibold text-on-surface mb-2 font-headline-sm text-headline-sm">Product Weekly Sync</h1>
+<div class="flex items-center gap-3 text-secondary text-body-sm">
+<span class="flex items-center gap-1"><span class="w-5 h-5 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[10px]">AV</span> Amara Voss</span>
+<span>Oct 24 2023, 10:00 AM</span>
+<span>English (Global) <span class="material-symbols-outlined text-[14px] align-middle" data-icon="expand_more">expand_more</span></span>
+</div>
+</div>
+<button class="px-3 py-1.5 border border-outline-variant rounded flex items-center gap-1 text-secondary hover:bg-surface-container text-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="videocam">videocam</span> Video
+                            </button>
+</div>
+<!-- General Summary Toolbar -->
+<div class="flex items-center gap-4 mb-8 text-primary font-medium border-b border-outline-variant pb-4">
+<button class="flex items-center gap-1 hover:bg-primary-container/10 px-2 py-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="auto_awesome">auto_awesome</span> General Summary
+                                <span class="material-symbols-outlined text-[16px]" data-icon="expand_more">expand_more</span>
+</button>
+<button class="flex items-center gap-1 hover:bg-primary-container/10 px-2 py-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit_note">edit_note</span> Refine Summary
+                            </button>
+<button class="hover:bg-primary-container/10 p-1 rounded transition-colors ml-auto text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+<!-- Notes Content -->
+<article class="prose prose-sm prose-slate max-w-none text-on-surface">
+<h3 class="text-lg font-semibold mb-4 text-on-surface font-headline-sm">Notes</h3>
+<h4 class="font-medium text-base mb-2">Overview</h4>
+<p class="mb-6 leading-relaxed">The product team aligned on the upcoming Q4 deliverables, specifically focusing on the new 'Prefix Matching' feature for the search infrastructure. Discussion covered current technical debt, resource allocation across frontend and backend teams, and finalized the rollout strategy for early access customers.</p>
+<h4 class="font-medium text-base mb-2">Key Points</h4>
+<ul class="list-disc pl-5 space-y-3 mb-8">
+<li class="pl-2">Search latency has increased by 12% over the last week. <a class="text-primary hover:underline ml-1" href="#">(04:18)</a></li>
+<li class="pl-2 relative">
+<div class="absolute -left-12 top-1 w-8 h-1 bg-primary rounded-full"></div>
+                                    Prefix matching will solve the core user complaints regarding partial term queries. <a class="text-primary hover:underline ml-1" href="#">(09:42)</a>
+</li>
+<li class="pl-2">Beta rollout scheduled for first week of November to cohort A. <a class="text-primary hover:underline ml-1" href="#">(15:20)</a></li>
+</ul>
+<h4 class="font-medium text-base mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-500 text-[20px]" data-icon="task_alt">task_alt</span> 
+                                Action Items
+                            </h4>
+<div class="space-y-2 mb-8 bg-surface p-4 rounded border border-outline-variant">
+<label class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded cursor-pointer transition-colors">
+<input class="mt-1 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-on-surface"><span class="font-medium">Dev Malik</span> — Add prefix matching logic to the core search API and write unit tests.</span>
+</label>
+<label class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded cursor-pointer transition-colors">
+<input checked="" class="mt-1 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-on-surface line-through text-secondary"><span class="font-medium">Nina Calder</span> — Update design documentation for the new search empty states.</span>
+</label>
+<label class="flex items-start gap-3 p-2 hover:bg-surface-container-low rounded cursor-pointer transition-colors">
+<input class="mt-1 rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="text-on-surface"><span class="font-medium">Jonah Reed</span> — Coordinate with marketing for the beta announcement email.</span>
+</label>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- Right Panel: Transcript -->
+<aside class="w-[360px] border-l border-outline-variant bg-surface-container-lowest flex flex-col h-full shrink-0">
+<!-- Tabs -->
+<div class="flex border-b border-outline-variant px-4 pt-3">
+<button class="flex items-center gap-2 pb-3 px-4 text-secondary hover:text-on-surface font-label-md transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="smart_toy">smart_toy</span>
+                        Ask FireFiles
+                    </button>
+<button class="flex items-center gap-2 pb-3 px-4 text-primary font-bold border-b-2 border-primary font-label-md">
+                        Transcript
+                    </button>
+<div class="ml-auto flex items-center gap-2 pb-2 text-secondary">
+<button class="hover:bg-surface-container p-1 rounded"><span class="material-symbols-outlined text-[18px]" data-icon="fullscreen">fullscreen</span></button>
+<button class="hover:bg-surface-container p-1 rounded"><span class="material-symbols-outlined text-[18px]" data-icon="content_copy">content_copy</span></button>
+</div>
+</div>
+<!-- Search -->
+<div class="p-4 border-b border-outline-variant">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]" data-icon="search">search</span>
+<input class="w-full pl-9 pr-20 py-1.5 bg-surface border border-outline-variant rounded text-body-sm focus:ring-1 focus:ring-primary focus:border-primary transition-shadow" placeholder="Find in transcript" type="text" value="invitation"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+<span class="text-label-sm text-secondary px-1">2 / 4</span>
+<div class="flex flex-col">
+<button class="text-secondary hover:text-on-surface leading-none h-3"><span class="material-symbols-outlined text-[14px]" data-icon="expand_less">expand_less</span></button>
+<button class="text-secondary hover:text-on-surface leading-none h-3"><span class="material-symbols-outlined text-[14px]" data-icon="expand_more">expand_more</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Transcript Scroll Area -->
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- Speaker Segment -->
+<div class="group">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[10px]">AV</div>
+<span class="font-medium text-body-sm">Amara Voss</span>
+</div>
+<span class="text-primary hover:underline cursor-pointer text-label-sm font-code text-code">00:14</span>
+</div>
+<p class="text-on-surface leading-relaxed pl-7 text-body-sm">
+                            Alright team, let's get started. We have a packed agenda today. First up, I want to review the current status of the search infrastructure upgrade. We've seen some latency issues crop up over the weekend.
+                        </p>
+</div>
+<!-- Speaker Segment (Active) -->
+<div class="group relative bg-surface-container-low p-2 rounded -mx-2">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l"></div>
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-orange-100 text-orange-700 flex items-center justify-center font-bold text-[10px]">DM</div>
+<span class="font-medium text-body-sm">Dev Malik</span>
+</div>
+<span class="text-primary font-bold cursor-pointer text-label-sm font-code text-code">02:10</span>
+</div>
+<p class="text-on-surface leading-relaxed pl-7 text-body-sm">
+                            Yeah, looking at the logs, the core issue seems to be how we're handling partial queries. Right now, without prefix matching, the database is doing full table scans for almost every keystroke. I was looking into sending an <span class="bg-yellow-200 text-yellow-900 px-1 rounded font-medium">invitation</span> to the backend team to review the new indexing strategy. If we implement the prefix tree, we should see latency drop significantly.
+                        </p>
+</div>
+<!-- Speaker Segment -->
+<div class="group">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-green-100 text-green-700 flex items-center justify-center font-bold text-[10px]">JR</div>
+<span class="font-medium text-body-sm">Jonah Reed</span>
+</div>
+<span class="text-primary hover:underline cursor-pointer text-label-sm font-code text-code">04:18</span>
+</div>
+<p class="text-on-surface leading-relaxed pl-7 text-body-sm">
+                            That makes sense. Dev, what's the timeline for getting that prefix matching logic written and tested? We need to coordinate this with the beta rollout to Cohort A next month.
+                        </p>
+</div>
+<!-- Speaker Segment -->
+<div class="group">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-orange-100 text-orange-700 flex items-center justify-center font-bold text-[10px]">DM</div>
+<span class="font-medium text-body-sm">Dev Malik</span>
+</div>
+<span class="text-primary hover:underline cursor-pointer text-label-sm font-code text-code">04:45</span>
+</div>
+<p class="text-on-surface leading-relaxed pl-7 text-body-sm">
+                            I can have a PR ready by Thursday for review. The unit tests might take an extra day, but we'll be clear for the early November target.
+                        </p>
+</div>
+</div>
+</aside>
+</main>
+</div>
+<!-- Fixed Bottom Media Player -->
+<footer class="fixed bottom-0 left-0 w-full h-[70px] bg-surface border-t border-outline-variant flex flex-col z-50">
+<!-- Progress Bar -->
+<div class="h-1 w-full bg-surface-container cursor-pointer relative group">
+<div class="h-full bg-primary absolute left-0 top-0" style="width: 6.3%;"></div>
+<div class="w-3 h-3 bg-primary rounded-full absolute top-1/2 -translate-y-1/2 -ml-1.5 shadow opacity-0 group-hover:opacity-100 transition-opacity" style="left: 6.3%;"></div>
+</div>
+<!-- Controls -->
+<div class="flex-1 flex items-center justify-between px-6">
+<!-- Left: Time & Actions -->
+<div class="flex items-center gap-4 w-1/3">
+<div class="font-code text-code text-secondary flex items-center gap-1">
+<span class="text-on-surface font-medium">02:10</span> / 34:00
+                </div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<button class="text-secondary hover:text-primary font-label-md flex items-center gap-1">
+                    Start from beginning <span class="material-symbols-outlined text-[16px]" data-icon="replay">replay</span>
+</button>
+</div>
+<!-- Center: Playback Controls -->
+<div class="flex items-center justify-center gap-6 w-1/3">
+<button class="text-secondary hover:text-on-surface font-label-md">1x</button>
+<button class="text-secondary hover:text-on-surface">
+<span class="material-symbols-outlined text-[24px]" data-icon="replay_10">replay_10</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-container hover:scale-105 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[28px] fill" data-icon="play_arrow">play_arrow</span>
+</button>
+<button class="text-secondary hover:text-on-surface">
+<span class="material-symbols-outlined text-[24px]" data-icon="forward_10">forward_10</span>
+</button>
+</div>
+<!-- Right: Utility -->
+<div class="flex items-center justify-end gap-4 w-1/3 text-secondary">
+<button class="hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" data-icon="star">star</span></button>
+<button class="hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" data-icon="edit_note">edit_note</span></button>
+<button class="hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" data-icon="thumb_up">thumb_up</span></button>
+<button class="hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" data-icon="download">download</span></button>
+</div>
+</div>
+</footer>
+</body></html>

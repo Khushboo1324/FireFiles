@@ -1,26 +1,136 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ff-background: #f8f9fa;
+  --ff-surface: #ffffff;
+  --ff-muted-surface: #f6f7f9;
+  --ff-border-soft: #eef0f4;
+  --ff-border: #e4e7ed;
+  --ff-border-strong: #ccc3d8;
+  --ff-text: #191c1d;
+  --ff-text-muted: #667085;
+  --ff-primary: #630ed4;
+  --ff-primary-hover: #5a00c6;
+  --ff-primary-soft: #f3efff;
+  --ff-error: #ef4444;
+  --ff-avatar: #00584f;
+  --background: var(--ff-background);
+  --foreground: var(--ff-text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ff-background: var(--ff-background);
+  --color-ff-surface: var(--ff-surface);
+  --color-ff-subtle: var(--ff-background);
+  --color-ff-muted-surface: var(--ff-muted-surface);
+  --color-ff-border-soft: var(--ff-border-soft);
+  --color-ff-border: var(--ff-border);
+  --color-ff-border-strong: var(--ff-border-strong);
+  --color-ff-text: var(--ff-text);
+  --color-ff-muted: var(--ff-text-muted);
+  --color-ff-primary: var(--ff-primary);
+  --color-ff-primary-hover: var(--ff-primary-hover);
+  --color-ff-primary-soft: var(--ff-primary-soft);
+  --color-ff-error: var(--ff-error);
+  --color-ff-avatar: var(--ff-avatar);
+  --font-sans: var(--font-open-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.meetings-shell {
+  display: grid;
+  grid-template-columns: 56px 220px minmax(0, 1fr) 330px;
+  grid-template-rows: 56px minmax(0, 1fr);
+  height: 100dvh;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.global-nav-rail {
+  grid-column: 1;
+  grid-row: 1 / -1;
+}
+
+.meetings-secondary-sidebar {
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+
+.app-header {
+  grid-column: 3 / -1;
+  grid-row: 1;
+}
+
+.meetings-workspace {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.ask-firefiles-panel {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+@media (max-width: 1200px) {
+  .meetings-shell {
+    grid-template-columns: 56px 220px minmax(0, 1fr);
+  }
+
+  .app-header {
+    grid-column: 3;
+  }
+
+  .ask-firefiles-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .meetings-shell {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .meetings-secondary-sidebar {
+    display: none;
+  }
+
+  .app-header,
+  .meetings-workspace {
+    grid-column: 2;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-open-sans), "Open Sans", ui-sans-serif, system-ui,
+    sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ff-primary);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #d9dce3;
 }
