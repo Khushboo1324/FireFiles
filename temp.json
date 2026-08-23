@@ -1,0 +1,14 @@
+[
+  {
+    "speaker": "Amara Voss",
+    "start_time_ms": 0,
+    "end_time_ms": 15000,
+    "text": "Starting the JSON transcript test."
+  },
+  {
+    "speaker": "Dev Test",
+    "start_time_ms": 15000,
+    "end_time_ms": 40000,
+    "text": "The structured import looks good."
+  }
+]
