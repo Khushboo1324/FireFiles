@@ -15,11 +15,13 @@ export function MeetingNotes({
   meeting,
   onActionItemsChange,
   onNotify,
+  onSeekToMs,
 }: {
   actionItemsHighlighted: boolean;
   meeting: MeetingDetail;
   onActionItemsChange: (update: (items: ActionItem[]) => ActionItem[]) => void;
   onNotify: (message: string, tone: "success" | "error") => void;
+  onSeekToMs: (milliseconds: number) => void;
 }) {
   return (
     <section className="meeting-notes-panel relative flex min-h-0 min-w-0 flex-col bg-white">
@@ -138,9 +140,13 @@ export function MeetingNotes({
               meetingId={meeting.id}
               onItemsChange={onActionItemsChange}
               onNotify={onNotify}
+              onSeekToMs={onSeekToMs}
               participants={meeting.participants}
             />
-            <ChaptersSection chapters={meeting.chapters} />
+            <ChaptersSection
+              chapters={meeting.chapters}
+              onSeekToMs={onSeekToMs}
+            />
           </div>
         </div>
       </div>

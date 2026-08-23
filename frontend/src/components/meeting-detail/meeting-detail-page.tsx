@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DetailToolRail } from "@/components/meeting-detail/detail-tool-rail";
 import { MeetingHeader } from "@/components/meeting-detail/meeting-header";
@@ -10,6 +10,7 @@ import { MeetingNotes } from "@/components/meeting-detail/meeting-notes";
 import { MeetingPlayer } from "@/components/meeting-detail/meeting-player";
 import { SmartSearchPanel } from "@/components/meeting-detail/smart-search-panel";
 import { TranscriptPanel } from "@/components/meeting-detail/transcript-panel";
+import { useMeetingPlayback } from "@/components/meeting-detail/use-meeting-playback";
 import { DeleteMeetingDialog } from "@/components/meetings/delete-meeting-dialog";
 import { MeetingFormDialog } from "@/components/meetings/meeting-form-dialog";
 import { Icon } from "@/components/ui/icon";
@@ -17,6 +18,7 @@ import { Toast, type ToastNotification } from "@/components/ui/toast";
 import { ApiError } from "@/lib/api/client";
 import { getMeeting } from "@/lib/api/meetings";
 import type { ActionItem, MeetingDetail } from "@/lib/api/types";
+import { findActiveTranscriptSegment } from "@/lib/meeting-playback";
 import {
   filterTranscriptSegments,
   type SmartFilter,
@@ -26,6 +28,77 @@ interface RequestResult {
   key: string | null;
   meeting: MeetingDetail | null;
   status: number | null;
+}
+
+interface MeetingDetailContentProps {
+  activeFilter: SmartFilter | null;
+  meeting: MeetingDetail;
+  onActionItemsChange: (update: (items: ActionItem[]) => ActionItem[]) => void;
+  onDelete: () => void;
+  onEdit: () => void;
+  onNotify: (message: string, tone: "success" | "error") => void;
+  onSmartFilterChange: (filter: SmartFilter | null) => void;
+}
+
+function MeetingDetailContent({
+  activeFilter,
+  meeting,
+  onActionItemsChange,
+  onDelete,
+  onEdit,
+  onNotify,
+  onSmartFilterChange,
+}: MeetingDetailContentProps) {
+  const mediaElementRef = useRef<HTMLAudioElement>(null);
+  const playback = useMeetingPlayback({
+    durationSeconds: meeting.duration_seconds,
+    mediaElementRef,
+    mediaUrl: meeting.media_url,
+  });
+  const visibleSegments = useMemo(
+    () => filterTranscriptSegments(meeting.transcript_segments, activeFilter),
+    [activeFilter, meeting.transcript_segments],
+  );
+  const activeSegment = useMemo(
+    () =>
+      findActiveTranscriptSegment(
+        meeting.transcript_segments,
+        playback.currentTimeSeconds,
+      ),
+    [meeting.transcript_segments, playback.currentTimeSeconds],
+  );
+
+  return (
+    <main className="meeting-detail-shell bg-white">
+      <MeetingHeader onDelete={onDelete} onEdit={onEdit} title={meeting.title} />
+      <DetailToolRail />
+      <SmartSearchPanel
+        actionItemCount={meeting.action_items.length}
+        activeFilter={activeFilter}
+        onActiveFilterChange={onSmartFilterChange}
+        segments={meeting.transcript_segments}
+        topics={meeting.topics}
+      />
+      <MeetingNotes
+        actionItemsHighlighted={activeFilter === "tasks"}
+        meeting={meeting}
+        onActionItemsChange={onActionItemsChange}
+        onNotify={onNotify}
+        onSeekToMs={playback.seekToMs}
+      />
+      <TranscriptPanel
+        activeFilter={activeFilter}
+        activeSegmentId={activeSegment?.id ?? null}
+        isPlaying={playback.isPlaying}
+        key={meeting.id}
+        onClearSmartFilter={() => onSmartFilterChange(null)}
+        onSeekToMs={playback.seekToMs}
+        seekRequestId={playback.seekRequestId}
+        segments={visibleSegments}
+      />
+      <MeetingPlayer mediaElementRef={mediaElementRef} playback={playback} />
+    </main>
+  );
 }
 
 function PanelSkeleton({ side }: { side: "left" | "right" }) {
@@ -138,15 +211,6 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
     status: null,
   });
   const requestKey = `${meetingId ?? "invalid"}:${retryVersion}`;
-  const visibleSegments = useMemo(
-    () =>
-      filterTranscriptSegments(
-        requestResult.meeting?.transcript_segments ?? [],
-        activeFilter,
-      ),
-    [activeFilter, requestResult.meeting],
-  );
-
   useEffect(() => {
     if (meetingId === null) {
       return;
@@ -240,35 +304,16 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
   }
 
   return (
-    <main className="meeting-detail-shell bg-white">
-      <MeetingHeader
-        onDelete={() => setIsDeleting(true)}
-        onEdit={() => setIsEditing(true)}
-        title={meeting.title}
-      />
-      <DetailToolRail />
-      <SmartSearchPanel
-        actionItemCount={meeting.action_items.length}
+    <>
+      <MeetingDetailContent
         activeFilter={activeFilter}
-        onActiveFilterChange={changeSmartFilter}
-        segments={meeting.transcript_segments}
-        topics={meeting.topics}
-      />
-      <MeetingNotes
-        actionItemsHighlighted={activeFilter === "tasks"}
+        key={`${meeting.id}:${meeting.duration_seconds}:${meeting.media_url ?? ""}`}
         meeting={meeting}
         onActionItemsChange={updateActionItems}
+        onDelete={() => setIsDeleting(true)}
+        onEdit={() => setIsEditing(true)}
         onNotify={showNotification}
-      />
-      <TranscriptPanel
-        activeFilter={activeFilter}
-        key={meeting.id}
-        onClearSmartFilter={() => setActiveFilter(null)}
-        segments={visibleSegments}
-      />
-      <MeetingPlayer
-        durationSeconds={meeting.duration_seconds}
-        mediaUrl={meeting.media_url}
+        onSmartFilterChange={changeSmartFilter}
       />
 
       {isEditing && (
@@ -307,6 +352,6 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
         notification={notification}
         onDismiss={() => setNotification(null)}
       />
-    </main>
+    </>
   );
 }

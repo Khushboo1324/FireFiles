@@ -1,7 +1,13 @@
 import type { Chapter } from "@/lib/api/types";
 import { formatTimestamp } from "@/lib/formatters/meeting";
 
-export function ChaptersSection({ chapters }: { chapters: Chapter[] }) {
+export function ChaptersSection({
+  chapters,
+  onSeekToMs,
+}: {
+  chapters: Chapter[];
+  onSeekToMs: (milliseconds: number) => void;
+}) {
   return (
     <section aria-labelledby="chapters-heading">
       <div className="mb-3 flex items-baseline gap-2">
@@ -21,9 +27,9 @@ export function ChaptersSection({ chapters }: { chapters: Chapter[] }) {
               <span className="absolute -left-[4px] top-[6px] size-[7px] rounded-full bg-[#8a5de7] ring-4 ring-white" />
               <div className="flex flex-wrap items-baseline gap-2">
                 <button
-                  className="text-[11px] font-semibold text-[#6d42d8] underline-offset-2 disabled:opacity-100"
-                  disabled
-                  title="Seeking will be added in a later step"
+                  aria-label={`Seek to ${formatTimestamp(chapter.start_time_ms)}`}
+                  className="rounded text-[11px] font-semibold text-[#6d42d8] underline-offset-2 hover:underline"
+                  onClick={() => onSeekToMs(chapter.start_time_ms)}
                   type="button"
                 >
                   {formatTimestamp(chapter.start_time_ms)}

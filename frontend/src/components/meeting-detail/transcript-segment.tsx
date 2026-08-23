@@ -4,18 +4,28 @@ import { formatTimestamp } from "@/lib/formatters/meeting";
 import type { TranscriptMatch } from "@/lib/transcript/search";
 
 export function TranscriptSegment({
+  isActive,
   currentMatchIndex,
   matches,
+  onSeek,
   segment,
 }: {
+  isActive: boolean;
   currentMatchIndex: number;
   matches: TranscriptMatch[];
+  onSeek: (milliseconds: number) => void;
   segment: TranscriptSegmentData;
 }) {
   return (
     <article
-      className="border-b border-ff-border-soft py-4 last:border-b-0"
+      aria-current={isActive ? "true" : undefined}
+      className={`border-b border-ff-border-soft py-4 transition-colors last:border-b-0 ${
+        isActive
+          ? "-mx-4 border-l-2 border-l-ff-primary bg-[#faf8ff] px-[14px]"
+          : ""
+      }`}
       data-transcript-segment={segment.id}
+      id={`transcript-segment-${segment.id}`}
     >
       <div className="mb-1.5 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
@@ -35,9 +45,9 @@ export function TranscriptSegment({
           </h3>
         </div>
         <button
-          className="shrink-0 text-[10px] font-semibold text-[#6d42d8] underline-offset-2 disabled:opacity-100"
-          disabled
-          title="Seeking will be added in a later step"
+          aria-label={`Seek to ${formatTimestamp(segment.start_time_ms)}`}
+          className="shrink-0 rounded text-[10px] font-semibold text-[#6d42d8] underline-offset-2 hover:underline"
+          onClick={() => onSeek(segment.start_time_ms)}
           type="button"
         >
           {formatTimestamp(segment.start_time_ms)}

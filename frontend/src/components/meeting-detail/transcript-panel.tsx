@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { TranscriptSearch } from "@/components/meeting-detail/transcript-search";
 import { TranscriptSegment } from "@/components/meeting-detail/transcript-segment";
@@ -17,18 +17,28 @@ const filterLabels: Record<Exclude<SmartFilter, "tasks">, string> = {
 };
 
 interface TranscriptPanelProps {
+  activeSegmentId: number | null;
   activeFilter: SmartFilter | null;
+  isPlaying: boolean;
   onClearSmartFilter: () => void;
+  onSeekToMs: (milliseconds: number) => void;
+  seekRequestId: number;
   segments: TranscriptSegmentData[];
 }
 
 export function TranscriptPanel({
+  activeSegmentId,
   activeFilter,
+  isPlaying,
   onClearSmartFilter,
+  onSeekToMs,
+  seekRequestId,
   segments,
 }: TranscriptPanelProps) {
   const [query, setQuery] = useState("");
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
+  const previousActiveSegmentId = useRef<number | null>(activeSegmentId);
+  const previousSeekRequestId = useRef(seekRequestId);
   const matches = useMemo(
     () => findTranscriptMatches(segments, query),
     [query, segments],
@@ -59,6 +69,22 @@ export function TranscriptPanel({
       ?.closest<HTMLElement>("[data-transcript-segment]")
       ?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [matches, normalizedCurrentIndex]);
+
+  useEffect(() => {
+    const activeSegmentChanged =
+      previousActiveSegmentId.current !== activeSegmentId;
+    const userSought = previousSeekRequestId.current !== seekRequestId;
+    previousActiveSegmentId.current = activeSegmentId;
+    previousSeekRequestId.current = seekRequestId;
+
+    if (!activeSegmentChanged || (!isPlaying && !userSought)) {
+      return;
+    }
+
+    document
+      .getElementById(`transcript-segment-${activeSegmentId}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [activeSegmentId, isPlaying, seekRequestId]);
 
   function moveMatch(direction: 1 | -1) {
     if (matches.length === 0) {
@@ -151,9 +177,11 @@ export function TranscriptPanel({
         {segments.length > 0 ? (
           segments.map((segment) => (
             <TranscriptSegment
+              isActive={segment.id === activeSegmentId}
               currentMatchIndex={normalizedCurrentIndex}
               key={segment.id}
               matches={matchesBySegment.get(segment.id) ?? []}
+              onSeek={onSeekToMs}
               segment={segment}
             />
           ))

@@ -30,6 +30,7 @@ export type IconName =
   | "more-horizontal"
   | "more-vertical"
   | "person-add"
+  | "pause"
   | "play"
   | "plus"
   | "puzzle"
@@ -209,6 +210,12 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
       <path d="M19 8v6" />
       <path d="M16 11h6" />
+    </>
+  ),
+  pause: (
+    <>
+      <path d="M9 6v12" />
+      <path d="M15 6v12" />
     </>
   ),
   play: <path d="m9 6 9 6-9 6Z" fill="currentColor" />,

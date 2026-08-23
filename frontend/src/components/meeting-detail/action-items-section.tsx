@@ -23,6 +23,7 @@ interface ActionItemsSectionProps {
   meetingId: number;
   onItemsChange: (update: (items: ActionItem[]) => ActionItem[]) => void;
   onNotify: (message: string, tone: "success" | "error") => void;
+  onSeekToMs: (milliseconds: number) => void;
   participants: Participant[];
 }
 
@@ -33,6 +34,7 @@ export function ActionItemsSection({
   meetingId,
   onItemsChange,
   onNotify,
+  onSeekToMs,
   participants,
 }: ActionItemsSectionProps) {
   const [isCreating, setIsCreating] = useState(false);
@@ -152,6 +154,7 @@ export function ActionItemsSection({
         <div className="rounded-md border border-ff-border bg-white">
           {items.map((item) => {
             const isPending = pendingIds.has(item.id);
+            const timestampMs = item.timestamp_ms;
             if (editingItemId === item.id) {
               return (
                 <div
@@ -196,7 +199,7 @@ export function ActionItemsSection({
                   >
                     {item.text}
                   </p>
-                  {(item.assignee || item.timestamp_ms !== null || isPending) && (
+                  {(item.assignee || timestampMs !== null || isPending) && (
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] text-ff-muted">
                       {item.assignee && (
                         <span className="flex items-center gap-1.5">
@@ -207,14 +210,14 @@ export function ActionItemsSection({
                           {item.assignee.name}
                         </span>
                       )}
-                      {item.timestamp_ms !== null && (
+                      {timestampMs !== null && (
                         <button
-                          className="font-medium text-[#6d42d8] underline-offset-2 disabled:opacity-100"
-                          disabled
-                          title="Seeking will be added in a later step"
+                          aria-label={`Seek to ${formatTimestamp(timestampMs)}`}
+                          className="rounded font-medium text-[#6d42d8] underline-offset-2 hover:underline"
+                          onClick={() => onSeekToMs(timestampMs)}
                           type="button"
                         >
-                          {formatTimestamp(item.timestamp_ms)}
+                          {formatTimestamp(timestampMs)}
                         </button>
                       )}
                       {isPending && (
