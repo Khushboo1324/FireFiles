@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 import type {
   ISODateString,
+  MeetingCreateRequest,
   MeetingDetail,
   MeetingListResponse,
 } from "@/lib/api/types";
@@ -59,4 +60,14 @@ export function getMeeting(meetingId: number): Promise<MeetingDetail> {
   }
 
   return apiFetch<MeetingDetail>(`/api/meetings/${meetingId}`);
+}
+
+export function createMeeting(
+  request: MeetingCreateRequest,
+): Promise<MeetingDetail> {
+  return apiFetch<MeetingDetail>("/api/meetings", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
 }

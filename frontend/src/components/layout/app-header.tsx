@@ -7,6 +7,8 @@ interface AppHeaderSearch {
   onChange: (value: string) => void;
   placeholder?: string;
   ariaLabel?: string;
+  disabled?: boolean;
+  title?: string;
 }
 
 interface AppHeaderProps {
@@ -35,8 +37,10 @@ export function AppHeader({ title, search }: AppHeaderProps) {
           />
           <input
             className="h-8 w-full rounded-[5px] border border-ff-border bg-ff-muted-surface pl-9 pr-12 text-[13px] text-ff-text outline-none placeholder:text-[#98a1b3] transition-colors focus:border-ff-primary focus:bg-white focus:ring-1 focus:ring-ff-primary"
+            disabled={search.disabled}
             onChange={(event) => search.onChange(event.target.value)}
             placeholder={search.placeholder}
+            title={search.title}
             type="search"
             value={search.value}
           />

@@ -81,3 +81,18 @@ export interface MeetingDetail {
   topics: Topic[];
   chapters: Chapter[];
 }
+
+export interface MeetingParticipantInput {
+  name: string;
+  email?: string | null;
+  avatar_url?: string | null;
+  is_organizer?: boolean;
+}
+
+export interface MeetingCreateRequest {
+  title: string;
+  meeting_date: ISODateTimeString;
+  duration_seconds: number;
+  media_url?: string | null;
+  participants: MeetingParticipantInput[];
+}

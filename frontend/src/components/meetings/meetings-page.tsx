@@ -6,7 +6,7 @@ import { MeetingsWorkspace } from "@/components/meetings/meetings-workspace";
 export function MeetingsPage() {
   return (
     <main className="meetings-shell bg-white">
-      <GlobalNavRail />
+      <GlobalNavRail activeRoute="meetings" />
       <MeetingsSidebar />
       <MeetingsWorkspace />
       <AskFireFilesPanel />

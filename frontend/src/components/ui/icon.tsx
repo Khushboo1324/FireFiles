@@ -6,28 +6,38 @@ export type IconName =
   | "auto-awesome"
   | "bar-chart"
   | "bell"
+  | "bookmark"
+  | "check"
   | "chart"
   | "chat-bubble"
   | "chevron-down"
   | "chevron-right"
   | "close"
+  | "copy"
+  | "download"
   | "equalizer"
+  | "eye"
   | "expand"
   | "extension"
   | "filter"
   | "fire"
   | "hash"
   | "history"
+  | "link"
+  | "menu"
   | "home"
   | "mic"
   | "more-horizontal"
   | "more-vertical"
   | "person-add"
+  | "play"
   | "plus"
   | "puzzle"
   | "search"
   | "send"
+  | "share"
   | "settings"
+  | "smile"
   | "smart-toy"
   | "sparkles"
   | "star"
@@ -75,6 +85,8 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M10 21h4" />
     </>
   ),
+  bookmark: <path d="M6 4h12v17l-6-4-6 4Z" />,
+  check: <path d="m5 12 4 4L19 6" />,
   chart: (
     <>
       <path d="M4 19V9" />
@@ -92,6 +104,19 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M18 6 6 18" />
     </>
   ),
+  copy: (
+    <>
+      <rect x="8" y="8" width="12" height="12" rx="2" />
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M12 3v12" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M4 19v2h16v-2" />
+    </>
+  ),
   expand: (
     <>
       <path d="M15 3h6v6" />
@@ -103,6 +128,12 @@ const iconPaths: Record<IconName, ReactNode> = {
   equalizer: (
     <>
       <path d="M4 13h3l2-6 4 12 2-6h5" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+      <circle cx="12" cy="12" r="2.5" />
     </>
   ),
   extension: (
@@ -129,6 +160,19 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
       <path d="M3 3v5h5" />
       <path d="M12 7v5l3 2" />
+    </>
+  ),
+  link: (
+    <>
+      <path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1" />
+      <path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1" />
+    </>
+  ),
+  menu: (
+    <>
+      <path d="M4 6h16" />
+      <path d="M4 12h16" />
+      <path d="M4 18h16" />
     </>
   ),
   home: (
@@ -167,6 +211,7 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M16 11h6" />
     </>
   ),
+  play: <path d="m9 6 9 6-9 6Z" fill="currentColor" />,
   plus: (
     <>
       <path d="M12 5v14" />
@@ -186,10 +231,27 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M22 2 11 13" />
     </>
   ),
+  share: (
+    <>
+      <circle cx="18" cy="5" r="2.5" />
+      <circle cx="6" cy="12" r="2.5" />
+      <circle cx="18" cy="19" r="2.5" />
+      <path d="m8.2 10.8 7.6-4.5" />
+      <path d="m8.2 13.2 7.6 4.5" />
+    </>
+  ),
   settings: (
     <>
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" />
+    </>
+  ),
+  smile: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 14s1.4 2 4 2 4-2 4-2" />
+      <circle cx="9" cy="9" r=".8" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="9" r=".8" fill="currentColor" stroke="none" />
     </>
   ),
   "smart-toy": (
