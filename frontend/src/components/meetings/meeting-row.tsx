@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { MeetingActionsMenu } from "@/components/meetings/meeting-actions-menu";
 import { Icon } from "@/components/ui/icon";
 import type { MeetingListItem } from "@/lib/api/types";
 import {
@@ -17,7 +18,15 @@ const tileStyles = [
   "bg-[#f1ebdf] text-[#76613e]",
 ];
 
-export function MeetingRow({ meeting }: { meeting: MeetingListItem }) {
+export function MeetingRow({
+  meeting,
+  onDelete,
+  onEdit,
+}: {
+  meeting: MeetingListItem;
+  onDelete: () => void;
+  onEdit: () => void;
+}) {
   const participantNames = meeting.participants
     .map((participant) => participant.name)
     .join(", ");
@@ -25,7 +34,7 @@ export function MeetingRow({ meeting }: { meeting: MeetingListItem }) {
   const tileStyle = tileStyles[meeting.id % tileStyles.length];
 
   return (
-    <article className="group relative flex min-h-16 items-center overflow-hidden rounded-lg border border-ff-border bg-white transition-colors hover:bg-ff-subtle focus-within:bg-ff-subtle">
+    <article className="group relative flex min-h-16 items-center rounded-lg border border-ff-border bg-white transition-colors hover:bg-ff-subtle focus-within:bg-ff-subtle">
       <span className="absolute inset-y-0 left-0 hidden w-[3px] bg-ff-primary group-hover:block group-focus-within:block" />
       <Link
         aria-label={`Open ${meeting.title}`}
@@ -91,15 +100,13 @@ export function MeetingRow({ meeting }: { meeting: MeetingListItem }) {
         )}
       </Link>
 
-      <button
-        aria-label={`More actions for ${meeting.title}`}
-        className="mr-2 flex size-8 shrink-0 items-center justify-center rounded-md text-ff-muted disabled:cursor-default disabled:opacity-100"
-        disabled
-        title="Meeting actions — available in an upcoming step"
-        type="button"
-      >
-        <Icon name="more-vertical" size={18} />
-      </button>
+      <div className="mr-2">
+        <MeetingActionsMenu
+          meetingTitle={meeting.title}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
+      </div>
     </article>
   );
 }

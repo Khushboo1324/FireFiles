@@ -4,6 +4,7 @@ import type {
   MeetingCreateRequest,
   MeetingDetail,
   MeetingListResponse,
+  MeetingUpdateRequest,
 } from "@/lib/api/types";
 
 export type MeetingSort = "newest" | "oldest";
@@ -69,5 +70,30 @@ export function createMeeting(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(request),
+  });
+}
+
+export function updateMeeting(
+  meetingId: number,
+  request: MeetingUpdateRequest,
+): Promise<MeetingDetail> {
+  if (!Number.isSafeInteger(meetingId) || meetingId <= 0) {
+    throw new RangeError("Meeting id must be a positive integer.");
+  }
+
+  return apiFetch<MeetingDetail>(`/api/meetings/${meetingId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
+}
+
+export function deleteMeeting(meetingId: number): Promise<void> {
+  if (!Number.isSafeInteger(meetingId) || meetingId <= 0) {
+    throw new RangeError("Meeting id must be a positive integer.");
+  }
+
+  return apiFetch<void>(`/api/meetings/${meetingId}`, {
+    method: "DELETE",
   });
 }

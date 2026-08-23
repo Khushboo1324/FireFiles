@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 
 import { AppHeader } from "@/components/layout/app-header";
+import { DeleteMeetingDialog } from "@/components/meetings/delete-meeting-dialog";
+import { MeetingFormDialog } from "@/components/meetings/meeting-form-dialog";
 import { MeetingList } from "@/components/meetings/meeting-list";
 import { MeetingsToolbar } from "@/components/meetings/meetings-toolbar";
+import { Toast, type ToastNotification } from "@/components/ui/toast";
 import { listMeetings, type MeetingSort } from "@/lib/api/meetings";
-import type { MeetingListResponse } from "@/lib/api/types";
+import type { MeetingListItem, MeetingListResponse } from "@/lib/api/types";
 
 const MEETING_LIMIT = 20;
 const SEARCH_DEBOUNCE_MS = 320;
@@ -31,6 +34,14 @@ export function MeetingsWorkspace() {
     hasError: false,
   });
   const [retryVersion, setRetryVersion] = useState(0);
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingMeetingId, setEditingMeetingId] = useState<number | null>(null);
+  const [deletingMeeting, setDeletingMeeting] = useState<MeetingListItem | null>(
+    null,
+  );
+  const [notification, setNotification] = useState<ToastNotification | null>(
+    null,
+  );
   const requestKey = JSON.stringify([
     debouncedSearch,
     participant,
@@ -112,6 +123,33 @@ export function MeetingsWorkspace() {
     clearToolbarFilters();
   }
 
+  function showNotification(
+    message: string,
+    tone: ToastNotification["tone"],
+  ) {
+    setNotification({ id: Date.now(), message, tone });
+  }
+
+  function removeDeletedMeeting(meetingId: number) {
+    setRequestResult((current) => {
+      if (!current.response) {
+        return current;
+      }
+      const isVisible = current.response.items.some(
+        (meeting) => meeting.id === meetingId,
+      );
+      return {
+        ...current,
+        response: {
+          items: current.response.items.filter(
+            (meeting) => meeting.id !== meetingId,
+          ),
+          total: Math.max(0, current.response.total - Number(isVisible)),
+        },
+      };
+    });
+  }
+
   const hasActiveQuery = Boolean(
     search.trim() || participant || dateFrom || dateTo,
   );
@@ -138,6 +176,7 @@ export function MeetingsWorkspace() {
           onDateFromChange={setDateFrom}
           onDateToChange={setDateTo}
           onParticipantChange={setParticipant}
+          onNewMeeting={() => setIsCreating(true)}
           onSortChange={setSort}
           participant={participant}
           participantOptions={participantOptions}
@@ -150,9 +189,55 @@ export function MeetingsWorkspace() {
           isLoading={isLoading}
           meetings={response?.items ?? []}
           onClearFilters={clearAllFilters}
+          onDeleteMeeting={setDeletingMeeting}
+          onEditMeeting={(meeting) => setEditingMeetingId(meeting.id)}
           onRetry={() => setRetryVersion((version) => version + 1)}
         />
       </section>
+
+      {isCreating && (
+        <MeetingFormDialog
+          mode="create"
+          onClose={() => setIsCreating(false)}
+          onSuccess={() => {
+            setIsCreating(false);
+            setRetryVersion((version) => version + 1);
+            showNotification("Meeting created.", "success");
+          }}
+        />
+      )}
+
+      {editingMeetingId !== null && (
+        <MeetingFormDialog
+          key={editingMeetingId}
+          meetingId={editingMeetingId}
+          mode="edit"
+          onClose={() => setEditingMeetingId(null)}
+          onSuccess={() => {
+            setEditingMeetingId(null);
+            setRetryVersion((version) => version + 1);
+            showNotification("Meeting updated.", "success");
+          }}
+        />
+      )}
+
+      {deletingMeeting && (
+        <DeleteMeetingDialog
+          meetingId={deletingMeeting.id}
+          meetingTitle={deletingMeeting.title}
+          onClose={() => setDeletingMeeting(null)}
+          onDeleted={() => {
+            removeDeletedMeeting(deletingMeeting.id);
+            setDeletingMeeting(null);
+            showNotification("Meeting deleted.", "success");
+          }}
+        />
+      )}
+
+      <Toast
+        notification={notification}
+        onDismiss={() => setNotification(null)}
+      />
     </>
   );
 }

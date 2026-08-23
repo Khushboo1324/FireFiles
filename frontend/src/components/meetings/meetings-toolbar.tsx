@@ -14,6 +14,7 @@ interface MeetingsToolbarProps {
   onDateToChange: (value: string) => void;
   onSortChange: (value: MeetingSort) => void;
   onClearFilters: () => void;
+  onNewMeeting: () => void;
 }
 
 export function MeetingsToolbar({
@@ -27,6 +28,7 @@ export function MeetingsToolbar({
   onDateToChange,
   onSortChange,
   onClearFilters,
+  onNewMeeting,
 }: MeetingsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,17 @@ export function MeetingsToolbar({
         </button>
       </div>
 
-      <div className="relative" ref={popoverRef}>
+      <div className="flex items-center gap-2">
+        <button
+          className="flex h-8 items-center gap-1.5 rounded-md bg-ff-primary px-3 text-[11px] font-semibold text-white transition-colors hover:bg-ff-primary-hover"
+          onClick={onNewMeeting}
+          type="button"
+        >
+          <Icon name="plus" size={14} />
+          New Meeting
+        </button>
+
+        <div className="relative" ref={popoverRef}>
         <button
           aria-expanded={isOpen}
           aria-haspopup="dialog"
@@ -112,7 +124,7 @@ export function MeetingsToolbar({
           )}
         </button>
 
-        {isOpen && (
+          {isOpen && (
           <div
             aria-label="Meeting filters"
             className="absolute right-0 top-10 z-30 w-[300px] rounded-lg border border-ff-border bg-white p-3 shadow-[0_10px_30px_rgba(31,26,41,0.12)]"
@@ -192,7 +204,8 @@ export function MeetingsToolbar({
               Clear filters
             </button>
           </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

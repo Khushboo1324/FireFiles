@@ -9,6 +9,8 @@ interface MeetingListProps {
   hasActiveQuery: boolean;
   onRetry: () => void;
   onClearFilters: () => void;
+  onDeleteMeeting: (meeting: MeetingListItem) => void;
+  onEditMeeting: (meeting: MeetingListItem) => void;
 }
 
 function MeetingListSkeleton() {
@@ -73,6 +75,8 @@ export function MeetingList({
   hasActiveQuery,
   onRetry,
   onClearFilters,
+  onDeleteMeeting,
+  onEditMeeting,
 }: MeetingListProps) {
   const groups = groupMeetingsByLocalDate(meetings);
 
@@ -113,7 +117,12 @@ export function MeetingList({
               </h2>
               <div className="space-y-2">
                 {group.meetings.map((meeting) => (
-                  <MeetingRow key={meeting.id} meeting={meeting} />
+                  <MeetingRow
+                    key={meeting.id}
+                    meeting={meeting}
+                    onDelete={() => onDeleteMeeting(meeting)}
+                    onEdit={() => onEditMeeting(meeting)}
+                  />
                 ))}
               </div>
             </section>

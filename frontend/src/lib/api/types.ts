@@ -96,3 +96,11 @@ export interface MeetingCreateRequest {
   media_url?: string | null;
   participants: MeetingParticipantInput[];
 }
+
+export interface MeetingUpdateRequest {
+  title?: string;
+  meeting_date?: ISODateTimeString;
+  duration_seconds?: number;
+  media_url?: string | null;
+  participants?: MeetingParticipantInput[];
+}

@@ -1,13 +1,21 @@
 import Link from "next/link";
 
+import { MeetingActionsMenu } from "@/components/meetings/meeting-actions-menu";
 import { Icon } from "@/components/ui/icon";
 
 interface MeetingHeaderProps {
   title: string;
   isLoading?: boolean;
+  onDelete?: () => void;
+  onEdit?: () => void;
 }
 
-export function MeetingHeader({ title, isLoading = false }: MeetingHeaderProps) {
+export function MeetingHeader({
+  title,
+  isLoading = false,
+  onDelete,
+  onEdit,
+}: MeetingHeaderProps) {
   return (
     <header className="meeting-detail-header z-30 flex h-[58px] min-w-0 items-center justify-between border-b border-ff-border bg-white px-4">
       <div className="flex min-w-0 items-center gap-2.5 text-[13px]">
@@ -36,15 +44,14 @@ export function MeetingHeader({ title, isLoading = false }: MeetingHeaderProps) 
             </span>
           )}
         </nav>
-        <button
-          aria-label="Meeting options"
-          className="flex size-7 shrink-0 items-center justify-center rounded text-ff-muted disabled:opacity-100"
-          disabled
-          title="Meeting options — available in an upcoming step"
-          type="button"
-        >
-          <Icon name="more-horizontal" size={18} />
-        </button>
+        {onDelete && onEdit && (
+          <MeetingActionsMenu
+            icon="more-horizontal"
+            meetingTitle={title}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { DetailToolRail } from "@/components/meeting-detail/detail-tool-rail";
@@ -9,7 +10,10 @@ import { MeetingNotes } from "@/components/meeting-detail/meeting-notes";
 import { MeetingPlayer } from "@/components/meeting-detail/meeting-player";
 import { SmartSearchPanel } from "@/components/meeting-detail/smart-search-panel";
 import { TranscriptPanel } from "@/components/meeting-detail/transcript-panel";
+import { DeleteMeetingDialog } from "@/components/meetings/delete-meeting-dialog";
+import { MeetingFormDialog } from "@/components/meetings/meeting-form-dialog";
 import { Icon } from "@/components/ui/icon";
+import { Toast, type ToastNotification } from "@/components/ui/toast";
 import { ApiError } from "@/lib/api/client";
 import { getMeeting } from "@/lib/api/meetings";
 import type { MeetingDetail } from "@/lib/api/types";
@@ -120,8 +124,14 @@ function MeetingStateShell({
 }
 
 export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
+  const router = useRouter();
   const [retryVersion, setRetryVersion] = useState(0);
   const [activeFilter, setActiveFilter] = useState<SmartFilter | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [notification, setNotification] = useState<ToastNotification | null>(
+    null,
+  );
   const [requestResult, setRequestResult] = useState<RequestResult>({
     key: null,
     meeting: null,
@@ -204,9 +214,20 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
     }
   }
 
+  function showNotification(
+    message: string,
+    tone: ToastNotification["tone"],
+  ) {
+    setNotification({ id: Date.now(), message, tone });
+  }
+
   return (
     <main className="meeting-detail-shell bg-white">
-      <MeetingHeader title={meeting.title} />
+      <MeetingHeader
+        onDelete={() => setIsDeleting(true)}
+        onEdit={() => setIsEditing(true)}
+        title={meeting.title}
+      />
       <DetailToolRail />
       <SmartSearchPanel
         actionItemCount={meeting.action_items.length}
@@ -228,6 +249,43 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
       <MeetingPlayer
         durationSeconds={meeting.duration_seconds}
         mediaUrl={meeting.media_url}
+      />
+
+      {isEditing && (
+        <MeetingFormDialog
+          initialMeeting={meeting}
+          key={meeting.id}
+          meetingId={meeting.id}
+          mode="edit"
+          onClose={() => setIsEditing(false)}
+          onSuccess={(updatedMeeting) => {
+            setRequestResult({
+              key: requestKey,
+              meeting: updatedMeeting,
+              status: null,
+            });
+            setIsEditing(false);
+            showNotification("Meeting updated.", "success");
+          }}
+        />
+      )}
+
+      {isDeleting && (
+        <DeleteMeetingDialog
+          meetingId={meeting.id}
+          meetingTitle={meeting.title}
+          onClose={() => setIsDeleting(false)}
+          onDeleted={() => {
+            setIsDeleting(false);
+            showNotification("Meeting deleted.", "success");
+            window.setTimeout(() => router.push("/meetings"), 550);
+          }}
+        />
+      )}
+
+      <Toast
+        notification={notification}
+        onDismiss={() => setNotification(null)}
       />
     </main>
   );
