@@ -3,7 +3,7 @@ import { ChaptersSection } from "@/components/meeting-detail/chapters-section";
 import { MeetingSummary } from "@/components/meeting-detail/meeting-summary";
 import { ParticipantAvatar } from "@/components/meeting-detail/participant-avatar";
 import { Icon } from "@/components/ui/icon";
-import type { MeetingDetail } from "@/lib/api/types";
+import type { ActionItem, MeetingDetail } from "@/lib/api/types";
 import {
   formatDuration,
   formatMeetingDate,
@@ -13,9 +13,13 @@ import {
 export function MeetingNotes({
   actionItemsHighlighted,
   meeting,
+  onActionItemsChange,
+  onNotify,
 }: {
   actionItemsHighlighted: boolean;
   meeting: MeetingDetail;
+  onActionItemsChange: (update: (items: ActionItem[]) => ActionItem[]) => void;
+  onNotify: (message: string, tone: "success" | "error") => void;
 }) {
   return (
     <section className="meeting-notes-panel relative flex min-h-0 min-w-0 flex-col bg-white">
@@ -127,9 +131,14 @@ export function MeetingNotes({
           <div className="space-y-9">
             <MeetingSummary summary={meeting.summary} />
             <ActionItemsSection
+              durationSeconds={meeting.duration_seconds}
               highlighted={actionItemsHighlighted}
               items={meeting.action_items}
               key={meeting.id}
+              meetingId={meeting.id}
+              onItemsChange={onActionItemsChange}
+              onNotify={onNotify}
+              participants={meeting.participants}
             />
             <ChaptersSection chapters={meeting.chapters} />
           </div>

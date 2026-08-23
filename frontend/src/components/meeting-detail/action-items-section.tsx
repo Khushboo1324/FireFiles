@@ -1,32 +1,52 @@
+"use client";
+
 import { useState } from "react";
 
+import { ActionItemEditor } from "@/components/meeting-detail/action-item-editor";
+import { ActionItemMenu } from "@/components/meeting-detail/action-item-menu";
+import { DeleteActionItemDialog } from "@/components/meeting-detail/delete-action-item-dialog";
 import { ParticipantAvatar } from "@/components/meeting-detail/participant-avatar";
 import { Icon } from "@/components/ui/icon";
-import { updateActionItem } from "@/lib/api/action-items";
-import type { ActionItem } from "@/lib/api/types";
+import {
+  createActionItem,
+  updateActionItem,
+  type ActionItemCreate,
+  type ActionItemUpdate,
+} from "@/lib/api/action-items";
+import type { ActionItem, Participant } from "@/lib/api/types";
 import { formatTimestamp } from "@/lib/formatters/meeting";
 
 interface ActionItemsSectionProps {
+  durationSeconds: number;
   highlighted: boolean;
   items: ActionItem[];
+  meetingId: number;
+  onItemsChange: (update: (items: ActionItem[]) => ActionItem[]) => void;
+  onNotify: (message: string, tone: "success" | "error") => void;
+  participants: Participant[];
 }
 
 export function ActionItemsSection({
+  durationSeconds,
   highlighted,
   items,
+  meetingId,
+  onItemsChange,
+  onNotify,
+  participants,
 }: ActionItemsSectionProps) {
-  const [currentItems, setCurrentItems] = useState(items);
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingItemId, setEditingItemId] = useState<number | null>(null);
+  const [deletingItem, setDeletingItem] = useState<ActionItem | null>(null);
   const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function toggleCompleted(item: ActionItem, completed: boolean) {
     if (pendingIds.has(item.id)) {
       return;
     }
 
-    setErrorMessage(null);
     setPendingIds((current) => new Set(current).add(item.id));
-    setCurrentItems((current) =>
+    onItemsChange((current) =>
       current.map((candidate) =>
         candidate.id === item.id ? { ...candidate, completed } : candidate,
       ),
@@ -34,20 +54,18 @@ export function ActionItemsSection({
 
     try {
       const updatedItem = await updateActionItem(item.id, { completed });
-      setCurrentItems((current) =>
+      onItemsChange((current) =>
         current.map((candidate) =>
           candidate.id === item.id ? updatedItem : candidate,
         ),
       );
     } catch {
-      setCurrentItems((current) =>
+      onItemsChange((current) =>
         current.map((candidate) =>
           candidate.id === item.id ? item : candidate,
         ),
       );
-      setErrorMessage(
-        "Couldn't update this action item. Your change was reverted.",
-      );
+      onNotify("Couldn't update action item.", "error");
     } finally {
       setPendingIds((current) => {
         const next = new Set(current);
@@ -55,6 +73,32 @@ export function ActionItemsSection({
         return next;
       });
     }
+  }
+
+  async function submitCreate(input: ActionItemCreate | ActionItemUpdate) {
+    const createdItem = await createActionItem(
+      meetingId,
+      input as ActionItemCreate,
+    );
+    // The backend assigns the next sequence and returns the newly appended item.
+    onItemsChange((current) => [...current, createdItem]);
+    setIsCreating(false);
+    onNotify("Action item added.", "success");
+  }
+
+  async function submitEdit(
+    itemId: number,
+    input: ActionItemCreate | ActionItemUpdate,
+  ) {
+    const updatedItem = await updateActionItem(
+      itemId,
+      input as ActionItemUpdate,
+    );
+    onItemsChange((current) =>
+      current.map((item) => (item.id === itemId ? updatedItem : item)),
+    );
+    setEditingItemId(null);
+    onNotify("Action item updated.", "success");
   }
 
   return (
@@ -75,25 +119,60 @@ export function ActionItemsSection({
         >
           Action Items
         </h2>
-        <span className="text-[10px] text-ff-muted">{currentItems.length}</span>
+        <span className="text-[10px] text-ff-muted">{items.length}</span>
+        <button
+          aria-controls="action-item-create-editor"
+          aria-expanded={isCreating}
+          className="ml-auto flex h-7 items-center gap-1 rounded-[5px] border border-[#ded5ef] bg-white px-2.5 text-[10px] font-semibold text-[#6440b4] transition-colors hover:bg-[#f8f5ff] disabled:opacity-50"
+          disabled={isCreating}
+          onClick={() => {
+            setEditingItemId(null);
+            setIsCreating(true);
+          }}
+          type="button"
+        >
+          <Icon name="plus" size={13} />
+          Add action item
+        </button>
       </div>
 
-      {errorMessage && (
-        <div
-          className="mb-3 rounded-[5px] border border-[#f3c8c8] bg-[#fff7f7] px-3 py-2 text-[10px] text-[#a33d3d]"
-          role="alert"
-        >
-          {errorMessage}
+      {isCreating && (
+        <div className="mb-2" id="action-item-create-editor">
+          <ActionItemEditor
+            durationSeconds={durationSeconds}
+            onCancel={() => setIsCreating(false)}
+            onFailure={(message) => onNotify(message, "error")}
+            onSubmit={submitCreate}
+            participants={participants}
+          />
         </div>
       )}
 
-      {currentItems.length > 0 ? (
-        <div className="overflow-hidden rounded-md border border-ff-border bg-white">
-          {currentItems.map((item) => {
+      {items.length > 0 ? (
+        <div className="rounded-md border border-ff-border bg-white">
+          {items.map((item) => {
             const isPending = pendingIds.has(item.id);
+            if (editingItemId === item.id) {
+              return (
+                <div
+                  className="border-b border-ff-border-soft p-2 last:border-b-0"
+                  key={item.id}
+                >
+                  <ActionItemEditor
+                    durationSeconds={durationSeconds}
+                    initialItem={item}
+                    onCancel={() => setEditingItemId(null)}
+                    onFailure={(message) => onNotify(message, "error")}
+                    onSubmit={(input) => submitEdit(item.id, input)}
+                    participants={participants}
+                  />
+                </div>
+              );
+            }
+
             return (
               <div
-                className="flex items-start gap-2.5 border-b border-ff-border-soft px-3 py-3 last:border-b-0"
+                className="relative flex items-start gap-2.5 border-b border-ff-border-soft px-3 py-3 last:border-b-0"
                 key={item.id}
               >
                 <input
@@ -139,29 +218,44 @@ export function ActionItemsSection({
                         </button>
                       )}
                       {isPending && (
-                        <span className="text-[#8d75bd]">Saving…</span>
+                        <span className="text-[#8d75bd]">Saving...</span>
                       )}
                     </div>
                   )}
                 </div>
 
-                <button
-                  aria-label="Action item options"
-                  className="flex size-6 shrink-0 items-center justify-center rounded text-ff-muted disabled:opacity-100"
-                  disabled
-                  title="Action item editing — available in an upcoming step"
-                  type="button"
-                >
-                  <Icon name="more-horizontal" size={15} />
-                </button>
+                <ActionItemMenu
+                  disabled={isPending}
+                  itemText={item.text}
+                  onDelete={() => setDeletingItem(item)}
+                  onEdit={() => {
+                    setIsCreating(false);
+                    setEditingItemId(item.id);
+                  }}
+                />
               </div>
             );
           })}
         </div>
       ) : (
         <p className="rounded-md border border-dashed border-ff-border px-4 py-4 text-[12px] text-ff-muted">
-          No action items recorded.
+          No action items yet.
         </p>
+      )}
+
+      {deletingItem && (
+        <DeleteActionItemDialog
+          item={deletingItem}
+          onClose={() => setDeletingItem(null)}
+          onDeleted={(itemId) => {
+            onItemsChange((current) =>
+              current.filter((item) => item.id !== itemId),
+            );
+            setDeletingItem(null);
+            onNotify("Action item deleted.", "success");
+          }}
+          onFailure={(message) => onNotify(message, "error")}
+        />
       )}
     </section>
   );

@@ -16,7 +16,7 @@ import { Icon } from "@/components/ui/icon";
 import { Toast, type ToastNotification } from "@/components/ui/toast";
 import { ApiError } from "@/lib/api/client";
 import { getMeeting } from "@/lib/api/meetings";
-import type { MeetingDetail } from "@/lib/api/types";
+import type { ActionItem, MeetingDetail } from "@/lib/api/types";
 import {
   filterTranscriptSegments,
   type SmartFilter,
@@ -221,6 +221,24 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
     setNotification({ id: Date.now(), message, tone });
   }
 
+  function updateActionItems(
+    update: (items: ActionItem[]) => ActionItem[],
+  ) {
+    // Keeping action items on the loaded meeting makes Smart Search and Notes
+    // consume the same list immediately after every mutation.
+    setRequestResult((current) =>
+      current.meeting
+        ? {
+            ...current,
+            meeting: {
+              ...current.meeting,
+              action_items: update(current.meeting.action_items),
+            },
+          }
+        : current,
+    );
+  }
+
   return (
     <main className="meeting-detail-shell bg-white">
       <MeetingHeader
@@ -239,6 +257,8 @@ export function MeetingDetailPage({ meetingId }: { meetingId: number | null }) {
       <MeetingNotes
         actionItemsHighlighted={activeFilter === "tasks"}
         meeting={meeting}
+        onActionItemsChange={updateActionItems}
+        onNotify={showNotification}
       />
       <TranscriptPanel
         activeFilter={activeFilter}
