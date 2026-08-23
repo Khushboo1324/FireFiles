@@ -1,4 +1,8 @@
-from app.schemas.action_item import ActionItemResponse
+from app.schemas.action_item import (
+    ActionItemCreate,
+    ActionItemResponse,
+    ActionItemUpdate,
+)
 from app.schemas.chapter import ChapterResponse
 from app.schemas.meeting import (
     MeetingCreateRequest,
@@ -17,7 +21,9 @@ from app.schemas.topic import TopicResponse
 from app.schemas.transcript_segment import TranscriptSegmentResponse
 
 __all__ = [
+    "ActionItemCreate",
     "ActionItemResponse",
+    "ActionItemUpdate",
     "ChapterResponse",
     "MeetingCreateRequest",
     "MeetingDetailResponse",
