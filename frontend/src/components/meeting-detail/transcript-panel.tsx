@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 
 import { TranscriptSearch } from "@/components/meeting-detail/transcript-search";
 import { TranscriptSegment } from "@/components/meeting-detail/transcript-segment";
@@ -191,7 +192,7 @@ export function TranscriptPanel({
             <p className="mt-3 text-[12px] text-ff-muted">
               {transcriptFilter
                 ? `No transcript segments match ${filterLabels[transcriptFilter]}.`
-                : "No transcript available for this meeting."}
+                : "No transcript available yet."}
             </p>
             {transcriptFilter && (
               <button
@@ -201,6 +202,14 @@ export function TranscriptPanel({
               >
                 Clear filter
               </button>
+            )}
+            {!transcriptFilter && (
+              <Link
+                className="mt-3 inline-flex h-8 items-center justify-center rounded-md border border-[#ded5ef] bg-white px-3 text-[11px] font-semibold text-ff-primary hover:bg-[#f8f5ff]"
+                href="/uploads"
+              >
+                Import transcript
+              </Link>
             )}
           </div>
         )}

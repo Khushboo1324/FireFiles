@@ -191,6 +191,7 @@ export function MeetingsWorkspace() {
           onClearFilters={clearAllFilters}
           onDeleteMeeting={setDeletingMeeting}
           onEditMeeting={(meeting) => setEditingMeetingId(meeting.id)}
+          onNewMeeting={() => setIsCreating(true)}
           onRetry={() => setRetryVersion((version) => version + 1)}
         />
       </section>

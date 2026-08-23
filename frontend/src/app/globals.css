@@ -93,7 +93,28 @@
   grid-row: 2;
 }
 
+.placeholder-shell {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: 56px minmax(0, 1fr);
+  height: 100dvh;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.placeholder-shell .app-header {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.placeholder-workspace {
+  grid-column: 2;
+  grid-row: 2;
+}
+
 @media (max-width: 860px) {
+  .placeholder-shell,
   .uploads-shell {
     grid-template-columns: 56px minmax(0, 1fr);
   }

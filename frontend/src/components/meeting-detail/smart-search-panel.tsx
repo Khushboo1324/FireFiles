@@ -168,7 +168,15 @@ export function SmartSearchPanel({
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.08em]">
               Topic Trackers
             </h3>
-            <Icon name="plus" size={15} />
+            <button
+              aria-label="Add topic tracker"
+              className="flex size-6 items-center justify-center rounded disabled:opacity-100"
+              disabled
+              title="Add topic tracker — coming soon"
+              type="button"
+            >
+              <Icon name="plus" size={15} />
+            </button>
           </div>
           {topics.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
@@ -184,7 +192,9 @@ export function SmartSearchPanel({
           ) : (
             <div className="py-5 text-center">
               <Icon className="mx-auto text-[#eea46d]" name="hash" size={18} />
-              <p className="mt-2 text-[11px] text-ff-muted">No topic trackers</p>
+              <p className="mt-2 text-[11px] text-ff-muted">
+                No topics available.
+              </p>
             </div>
           )}
         </section>

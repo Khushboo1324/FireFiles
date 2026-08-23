@@ -10,30 +10,69 @@ interface RailItem {
   route?: GlobalNavRoute;
 }
 
-export type GlobalNavRoute = "meetings" | "uploads";
+export type GlobalNavRoute =
+  | "meetings"
+  | "uploads"
+  | "ask-firefiles"
+  | "meeting-status"
+  | "integrations"
+  | "analytics"
+  | "ai-tools"
+  | "team"
+  | "settings";
 
 const primaryItems: RailItem[] = [
-  { label: "Home", icon: "home" },
-  { label: "Ask AI", icon: "chat-bubble" },
+  { label: "Home", icon: "home", href: "/meetings" },
+  {
+    label: "Ask FireFiles",
+    icon: "chat-bubble",
+    href: "/ask-firefiles",
+    route: "ask-firefiles",
+  },
   {
     label: "Meetings",
     icon: "video-library",
     href: "/meetings",
     route: "meetings",
   },
-  { label: "Meeting Status", icon: "equalizer" },
+  {
+    label: "Meeting Status",
+    icon: "equalizer",
+    href: "/meeting-status",
+    route: "meeting-status",
+  },
   { label: "Uploads", icon: "upload", href: "/uploads", route: "uploads" },
 ];
 
 const insightItems: RailItem[] = [
-  { label: "Integrations", icon: "extension" },
-  { label: "Analytics", icon: "bar-chart" },
-  { label: "AI Tools", icon: "auto-awesome" },
+  {
+    label: "Integrations",
+    icon: "extension",
+    href: "/integrations",
+    route: "integrations",
+  },
+  {
+    label: "Analytics",
+    icon: "bar-chart",
+    href: "/analytics",
+    route: "analytics",
+  },
+  {
+    label: "AI Tools",
+    icon: "auto-awesome",
+    href: "/ai-tools",
+    route: "ai-tools",
+  },
 ];
 
 const accountItems: RailItem[] = [
-  { label: "Team", icon: "users" },
-  { label: "Settings", icon: "settings" },
+  { label: "Team", icon: "users", href: "/team", route: "team" },
+  {
+    label: "Settings",
+    icon: "settings",
+    href: "/settings",
+    route: "settings",
+  },
   { label: "More", icon: "more-horizontal" },
 ];
 
@@ -42,7 +81,7 @@ function RailGroup({
   expanded,
   items,
 }: {
-  activeRoute: GlobalNavRoute;
+  activeRoute?: GlobalNavRoute;
   expanded: boolean;
   items: RailItem[];
 }) {
@@ -83,7 +122,7 @@ function RailGroup({
             className={className}
             disabled
             key={item.label}
-            title={`${item.label} — available in an upcoming step`}
+            title={`${item.label} — coming soon`}
             type="button"
           >
             <Icon name={item.icon} size={20} />
@@ -98,7 +137,7 @@ function RailGroup({
 }
 
 export function GlobalNavRail({
-  activeRoute = "meetings",
+  activeRoute,
   expanded = false,
 }: {
   activeRoute?: GlobalNavRoute;

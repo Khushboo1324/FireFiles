@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { AppHeader } from "@/components/layout/app-header";
 import { GlobalNavRail } from "@/components/layout/global-nav-rail";
@@ -11,23 +11,22 @@ import {
 } from "@/components/uploads/import-transcript-modal";
 import { UploadDropzone } from "@/components/uploads/upload-dropzone";
 import { Icon } from "@/components/ui/icon";
+import { Toast, type ToastNotification } from "@/components/ui/toast";
 
 export function UploadsPage() {
   const router = useRouter();
   const [source, setSource] = useState<ImportSource | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!showSuccess) {
-      return;
-    }
-    const timeoutId = window.setTimeout(() => setShowSuccess(false), 2500);
-    return () => window.clearTimeout(timeoutId);
-  }, [showSuccess]);
+  const [notification, setNotification] = useState<ToastNotification | null>(
+    null,
+  );
 
   function finishImport(meetingId: number) {
     setSource(null);
-    setShowSuccess(true);
+    setNotification({
+      id: Date.now(),
+      message: "Transcript uploaded.",
+      tone: "success",
+    });
     window.setTimeout(() => router.push(`/meetings/${meetingId}`), 550);
   }
 
@@ -39,17 +38,7 @@ export function UploadsPage() {
   return (
     <main className="uploads-shell bg-white">
       <GlobalNavRail activeRoute="uploads" expanded />
-      <AppHeader
-        search={{
-          value: "",
-          onChange: () => undefined,
-          placeholder: "Search by title or keyword",
-          ariaLabel: "Upload search coming soon",
-          disabled: true,
-          title: "Upload search coming soon",
-        }}
-        title="Uploads"
-      />
+      <AppHeader title="Uploads" />
 
       <section className="uploads-workspace min-h-0 overflow-y-auto bg-white px-6 py-8 md:px-10">
         <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center">
@@ -74,7 +63,7 @@ export function UploadsPage() {
               You have no recent uploads!
             </h2>
             <p className="mt-1 text-[11px] text-ff-muted">
-              Uploaded transcripts will appear here.
+              Upload history is not included in this demo.
             </p>
           </section>
         </div>
@@ -89,18 +78,10 @@ export function UploadsPage() {
         />
       )}
 
-      {showSuccess && (
-        <div
-          aria-live="polite"
-          className="fixed bottom-6 left-1/2 z-[60] flex -translate-x-1/2 items-center gap-2 rounded-lg bg-[#242038] px-4 py-3 text-[12px] font-semibold text-white shadow-lg"
-          role="status"
-        >
-          <span className="flex size-5 items-center justify-center rounded-full bg-[#55b987]">
-            <Icon name="check" size={13} />
-          </span>
-          Transcript uploaded.
-        </div>
-      )}
+      <Toast
+        notification={notification}
+        onDismiss={() => setNotification(null)}
+      />
     </main>
   );
 }

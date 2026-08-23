@@ -97,13 +97,14 @@ export function MeetingHeader({
           <Icon name="bell" size={18} />
           <span className="absolute right-1.5 top-1 size-2 rounded-full border-2 border-white bg-ff-error" />
         </button>
-        <span
-          aria-label="Demo user"
+        <Link
+          aria-label="Open demo account settings"
           className="ml-1 flex size-8 items-center justify-center rounded-md bg-ff-avatar text-[12px] font-semibold text-white"
-          role="img"
+          href="/settings"
+          title="Demo User — open settings"
         >
           C
-        </span>
+        </Link>
       </div>
     </header>
   );

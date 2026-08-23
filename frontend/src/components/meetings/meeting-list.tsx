@@ -9,6 +9,7 @@ interface MeetingListProps {
   hasActiveQuery: boolean;
   onRetry: () => void;
   onClearFilters: () => void;
+  onNewMeeting: () => void;
   onDeleteMeeting: (meeting: MeetingListItem) => void;
   onEditMeeting: (meeting: MeetingListItem) => void;
 }
@@ -42,11 +43,13 @@ function ListMessage({
   children,
   actionLabel,
   onAction,
+  primaryAction = false,
   role,
 }: {
   children: React.ReactNode;
   actionLabel?: string;
   onAction?: () => void;
+  primaryAction?: boolean;
   role?: "alert";
 }) {
   return (
@@ -57,7 +60,11 @@ function ListMessage({
       <p className="text-[13px] font-medium text-ff-text">{children}</p>
       {actionLabel && onAction && (
         <button
-          className="mt-3 h-8 rounded-md border border-ff-border bg-white px-3 text-[11px] font-semibold text-ff-text transition-colors hover:bg-ff-muted-surface"
+          className={`mt-3 h-8 rounded-md px-3 text-[11px] font-semibold transition-colors ${
+            primaryAction
+              ? "bg-ff-primary text-white hover:bg-ff-primary-hover"
+              : "border border-ff-border bg-white text-ff-text hover:bg-ff-muted-surface"
+          }`}
           onClick={onAction}
           type="button"
         >
@@ -75,6 +82,7 @@ export function MeetingList({
   hasActiveQuery,
   onRetry,
   onClearFilters,
+  onNewMeeting,
   onDeleteMeeting,
   onEditMeeting,
 }: MeetingListProps) {
@@ -96,8 +104,9 @@ export function MeetingList({
 
       {!isLoading && !hasError && meetings.length === 0 && (
         <ListMessage
-          actionLabel={hasActiveQuery ? "Clear filters" : undefined}
-          onAction={hasActiveQuery ? onClearFilters : undefined}
+          actionLabel={hasActiveQuery ? "Clear filters" : "+ New Meeting"}
+          onAction={hasActiveQuery ? onClearFilters : onNewMeeting}
+          primaryAction={!hasActiveQuery}
         >
           {hasActiveQuery
             ? "No meetings match your filters."

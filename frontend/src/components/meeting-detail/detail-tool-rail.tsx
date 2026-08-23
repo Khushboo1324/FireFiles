@@ -25,7 +25,7 @@ export function DetailToolRail() {
             }`}
             disabled
             key={tool.label}
-            title={tool.selected ? tool.label : `${tool.label} — available later`}
+            title={tool.selected ? tool.label : `${tool.label} — coming soon`}
             type="button"
           >
             <Icon name={tool.icon} size={19} />
@@ -37,7 +37,7 @@ export function DetailToolRail() {
         aria-label="Send feedback"
         className="mt-auto flex size-9 items-center justify-center rounded-md text-[#758196] disabled:opacity-100"
         disabled
-        title="Feedback — available later"
+        title="Feedback — coming soon"
         type="button"
       >
         <Icon name="smile" size={18} />

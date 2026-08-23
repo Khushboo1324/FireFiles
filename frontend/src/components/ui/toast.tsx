@@ -40,7 +40,7 @@ export function Toast({
     <div
       aria-atomic="true"
       aria-live={isSuccess ? "polite" : "assertive"}
-      className="fixed bottom-6 left-1/2 z-[70] flex min-w-56 -translate-x-1/2 items-center gap-2 rounded-lg bg-[#242038] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_8px_24px_rgba(24,20,40,0.22)]"
+      className="fixed bottom-24 right-6 z-[70] flex min-w-56 max-w-sm items-center gap-2 rounded-lg bg-[#242038] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_8px_24px_rgba(24,20,40,0.22)]"
       role={isSuccess ? "status" : "alert"}
     >
       <span

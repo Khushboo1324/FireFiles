@@ -93,9 +93,21 @@ export function MeetingSelector({
 
       <div className="mt-2 max-h-40 overflow-y-auto rounded-md border border-ff-border bg-white p-1">
         {requestState.isLoading ? (
-          <p className="px-3 py-5 text-center text-[12px] text-ff-muted">
-            Loading meetings...
-          </p>
+          <div
+            aria-label="Loading meetings"
+            className="space-y-1.5 p-1"
+            role="status"
+          >
+            {Array.from({ length: 3 }, (_, index) => (
+              <div
+                className="animate-pulse rounded px-2.5 py-2 motion-reduce:animate-none"
+                key={index}
+              >
+                <div className="h-2.5 w-2/5 rounded bg-ff-border-soft" />
+                <div className="mt-2 h-2 w-3/5 rounded bg-ff-muted-surface" />
+              </div>
+            ))}
+          </div>
         ) : requestState.hasError ? (
           <div className="px-3 py-4 text-center">
             <p className="text-[12px] text-ff-error">Couldn&apos;t load meetings.</p>

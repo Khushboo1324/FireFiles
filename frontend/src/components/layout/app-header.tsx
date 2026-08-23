@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Icon } from "@/components/ui/icon";
 
 interface AppHeaderSearch {
@@ -56,7 +58,7 @@ export function AppHeader({ title, search }: AppHeaderProps) {
         <button
           className="flex h-8 items-center gap-1.5 rounded-[5px] border border-ff-border-strong bg-ff-surface px-3 text-[12px] font-medium text-ff-text shadow-[0_1px_2px_rgba(25,28,29,0.04)] transition-colors hover:bg-ff-muted-surface disabled:cursor-default disabled:opacity-100 max-[1280px]:hidden"
           disabled
-          title="Demo placeholder"
+          title="Billing and AI credits are not included in this demo."
           type="button"
         >
           <Icon name="auto-awesome" size={16} />
@@ -66,7 +68,7 @@ export function AppHeader({ title, search }: AppHeaderProps) {
         <button
           className="flex h-8 items-center gap-1 rounded-[5px] border border-ff-primary bg-[#fbf9ff] px-3 text-[12px] font-medium text-ff-primary transition-colors hover:bg-ff-primary-soft disabled:cursor-default disabled:opacity-100 max-[1040px]:hidden"
           disabled
-          title="Demo placeholder"
+          title="Invitations and sharing are not included in this demo."
           type="button"
         >
           <Icon name="person-add" size={16} />
@@ -77,7 +79,7 @@ export function AppHeader({ title, search }: AppHeaderProps) {
           <button
             className="flex h-8 items-center gap-1 border-r border-white/25 bg-ff-primary px-3 text-[12px] font-semibold text-white transition-colors hover:bg-ff-primary-hover disabled:cursor-default disabled:opacity-100"
             disabled
-            title="Demo placeholder"
+            title="Live meeting capture is not included in this demo."
             type="button"
           >
             <Icon name="video-camera" size={16} />
@@ -87,7 +89,7 @@ export function AppHeader({ title, search }: AppHeaderProps) {
             aria-label="Capture options"
             className="flex h-8 w-8 items-center justify-center bg-ff-primary text-white transition-colors hover:bg-ff-primary-hover disabled:cursor-default disabled:opacity-100"
             disabled
-            title="Demo placeholder"
+            title="Live meeting capture options are not included in this demo."
             type="button"
           >
             <Icon name="chevron-down" size={17} />
@@ -99,7 +101,7 @@ export function AppHeader({ title, search }: AppHeaderProps) {
             aria-label="Microphone"
             className="flex size-8 items-center justify-center rounded-full text-ff-primary transition-colors hover:bg-ff-muted-surface disabled:cursor-default disabled:opacity-100"
             disabled
-            title="Demo placeholder"
+            title="Microphone capture is not included in this demo."
             type="button"
           >
             <Icon name="mic" size={19} />
@@ -108,21 +110,20 @@ export function AppHeader({ title, search }: AppHeaderProps) {
             aria-label="Notifications"
             className="relative flex size-8 items-center justify-center rounded-full text-ff-muted transition-colors hover:bg-ff-muted-surface disabled:cursor-default disabled:opacity-100"
             disabled
-            title="Demo placeholder"
+            title="Notifications are not included in this demo."
             type="button"
           >
             <Icon name="bell" size={19} />
             <span className="absolute right-1.5 top-1.5 size-2 rounded-full border-2 border-white bg-ff-error" />
           </button>
-          <button
-            aria-label="Demo user"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ff-avatar text-[12px] font-semibold text-white disabled:cursor-default disabled:opacity-100"
-            disabled
-            title="Demo user"
-            type="button"
+          <Link
+            aria-label="Open demo account settings"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-ff-avatar text-[12px] font-semibold text-white"
+            href="/settings"
+            title="Demo User — open settings"
           >
             C
-          </button>
+          </Link>
         </div>
       </div>
     </header>

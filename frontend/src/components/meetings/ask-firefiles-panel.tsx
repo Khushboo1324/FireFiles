@@ -46,7 +46,7 @@ export function AskFireFilesPanel() {
             Hi there!
           </h2>
           <p className="mt-1.5 max-w-[235px] text-[13px] leading-5 text-ff-muted">
-            Get ready for your meetings
+            AI Q&amp;A is a demo placeholder and is not connected to a model.
           </p>
         </div>
 

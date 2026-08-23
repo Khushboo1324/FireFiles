@@ -9,7 +9,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "FireFiles",
+  title: "FireFiles — Meeting Notes & Transcription",
   description: "Meeting notes and transcription workspace",
 };
 
