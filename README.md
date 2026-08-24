@@ -174,7 +174,7 @@ cp .env.example .env
 `backend/.env.example` is the source of truth:
 
 ```dotenv
-APP_ENV=development
+ENV=development
 FRONTEND_URL=http://localhost:3000
 DATABASE_URL=sqlite:///./firefiles.db
 ```
@@ -426,10 +426,11 @@ The repository does not include browser automation tests.
 
 ## Deployment
 
-- Frontend: pending deployment
-- Backend: pending deployment
-
-These entries will be updated after the deployment step.
+- Backend target: Railway, using `backend/` as the service root and `/backend/railway.toml` as the config file path.
+- Railway builds the backend with Railpack and starts it with `./start.sh`. The script applies Alembic migrations, runs the idempotent demo seeder without `--reset`, and then starts Uvicorn on Railway's provided port.
+- Attach a persistent volume to the backend service at `/data`, then set `DATABASE_URL=sqlite:////data/firefiles.db` so SQLite data survives deployments.
+- Set `ENV=production` and set `FRONTEND_URL` to the real Vercel origin after the frontend is deployed. Do not include a trailing slash in the origin.
+- Frontend target: Vercel (pending deployment).
 
 ## Screenshots
 

@@ -1,10 +1,14 @@
 from functools import lru_cache
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_env: str = "development"
+    app_env: str = Field(
+        default="development",
+        validation_alias=AliasChoices("ENV", "APP_ENV"),
+    )
     frontend_url: str = "http://localhost:3000"
     database_url: str = "sqlite:///./firefiles.db"
 
