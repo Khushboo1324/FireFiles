@@ -14,7 +14,6 @@ interface MeetingsToolbarProps {
   onDateToChange: (value: string) => void;
   onSortChange: (value: MeetingSort) => void;
   onClearFilters: () => void;
-  onNewMeeting: () => void;
 }
 
 export function MeetingsToolbar({
@@ -28,7 +27,6 @@ export function MeetingsToolbar({
   onDateToChange,
   onSortChange,
   onClearFilters,
-  onNewMeeting,
 }: MeetingsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -70,12 +68,12 @@ export function MeetingsToolbar({
     <div className="relative z-10 flex min-h-[58px] shrink-0 items-center justify-between border-b border-ff-border bg-white px-4 py-2.5">
       <div
         aria-label="Meeting ownership"
-        className="flex rounded-lg border border-ff-border bg-ff-muted-surface p-1"
+        className="flex bg-ff-muted-surface p-1"
         role="group"
       >
         <button
           aria-pressed="true"
-          className="h-7 rounded-md border border-ff-border bg-white px-3 text-[11px] font-semibold text-ff-text shadow-[0_1px_2px_rgba(25,28,29,0.04)] disabled:opacity-100"
+          className="h-7  border-ff-border bg-white px-3 text-[11px] font-semibold text-ff-text  disabled:opacity-100"
           disabled
           title="Hosted by me — demo view"
           type="button"
@@ -94,15 +92,6 @@ export function MeetingsToolbar({
       </div>
 
       <div className="flex items-center gap-2">
-        <button
-          className="flex h-8 items-center gap-1.5 rounded-md bg-ff-primary px-3 text-[11px] font-semibold text-white transition-colors hover:bg-ff-primary-hover"
-          onClick={onNewMeeting}
-          type="button"
-        >
-          <Icon name="plus" size={14} />
-          New Meeting
-        </button>
-
         <div className="relative" ref={popoverRef}>
         <button
           aria-expanded={isOpen}

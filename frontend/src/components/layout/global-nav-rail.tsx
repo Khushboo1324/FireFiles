@@ -63,6 +63,7 @@ const insightItems: RailItem[] = [
     href: "/ai-tools",
     route: "ai-tools",
   },
+
 ];
 
 const accountItems: RailItem[] = [
@@ -171,7 +172,7 @@ export function GlobalNavRail({
         />
         {expanded && (
           <span className="text-[18px] font-bold tracking-[-0.02em] text-[#202536] max-[860px]:hidden">
-            FireFiles
+            firefiles.ai
           </span>
         )}
       </Link>
@@ -188,15 +189,14 @@ export function GlobalNavRail({
         activeRoute={activeRoute}
         expanded={expanded}
         items={insightItems}
+
       />
       <div className="my-2.5 h-px w-full bg-ff-border" />
-      <div className="mt-auto w-full">
         <RailGroup
           activeRoute={activeRoute}
           expanded={expanded}
           items={accountItems}
         />
-      </div>
     </nav>
   );
 }

@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Meetings | FireFiles",
 };
 
-export default function MeetingsRoute() {
-  return <MeetingsPage />;
+export default async function MeetingsRoute({
+  searchParams,
+}: PageProps<"/meetings">) {
+  const { create } = await searchParams;
+
+  return <MeetingsPage openCreateDialog={create === "1"} />;
 }

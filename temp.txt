@@ -1,3 +1,0 @@
-[00:00] Amara Voss: Starting the uploaded transcript.
-[00:30] Dev Test: The upload parser is working correctly.
-[01:00] Amara Voss: Let's finish the verification.

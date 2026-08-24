@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@/components/ui/icon";
 
@@ -16,9 +18,60 @@ interface AppHeaderSearch {
 interface AppHeaderProps {
   title: string;
   search?: AppHeaderSearch;
+  onCapture?: () => void;
 }
 
-export function AppHeader({ title, search }: AppHeaderProps) {
+export function AppHeader({ title, search, onCapture }: AppHeaderProps) {
+  const router = useRouter();
+  const [isCaptureMenuOpen, setIsCaptureMenuOpen] = useState(false);
+  const captureMenuRef = useRef<HTMLDivElement>(null);
+  const captureMenuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isCaptureMenuOpen) {
+      return;
+    }
+
+    function handlePointerDown(event: MouseEvent) {
+      if (
+        event.target instanceof Node &&
+        !captureMenuRef.current?.contains(event.target)
+      ) {
+        setIsCaptureMenuOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsCaptureMenuOpen(false);
+        captureMenuButtonRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isCaptureMenuOpen]);
+
+  function openNewMeeting() {
+    setIsCaptureMenuOpen(false);
+    if (onCapture) {
+      onCapture();
+      return;
+    }
+
+    // Pages without the meeting dialog hand off a one-time creation intent.
+    router.push("/meetings?create=1");
+  }
+
+  function openUploads() {
+    setIsCaptureMenuOpen(false);
+    router.push("/uploads");
+  }
+
   return (
     <header className="app-header z-30 flex h-14 min-w-0 shrink-0 items-center justify-between border-b border-ff-border bg-ff-surface px-4">
       <div className="w-48 shrink-0 max-[760px]:w-28">
@@ -75,25 +128,58 @@ export function AppHeader({ title, search }: AppHeaderProps) {
           Invite
         </button>
 
-        <div className="flex h-8 overflow-hidden rounded-[5px]">
-          <button
-            className="flex h-8 items-center gap-1 border-r border-white/25 bg-ff-primary px-3 text-[12px] font-semibold text-white transition-colors hover:bg-ff-primary-hover disabled:cursor-default disabled:opacity-100"
-            disabled
-            title="Live meeting capture is not included in this demo."
-            type="button"
-          >
-            <Icon name="video-camera" size={16} />
-            Capture
-          </button>
-          <button
-            aria-label="Capture options"
-            className="flex h-8 w-8 items-center justify-center bg-ff-primary text-white transition-colors hover:bg-ff-primary-hover disabled:cursor-default disabled:opacity-100"
-            disabled
-            title="Live meeting capture options are not included in this demo."
-            type="button"
-          >
-            <Icon name="chevron-down" size={17} />
-          </button>
+        <div className="relative" ref={captureMenuRef}>
+          <div className="flex h-8 overflow-hidden rounded-[5px]">
+            <button
+              aria-label="Create meeting"
+              className="flex h-8 items-center gap-1 border-r border-white/25 bg-ff-primary px-3 text-[12px] font-semibold text-white transition-colors hover:bg-ff-primary-hover focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ff-primary focus-visible:ring-offset-2"
+              onClick={openNewMeeting}
+              type="button"
+            >
+              <Icon name="video-camera" size={16} />
+              Capture
+            </button>
+            <button
+              aria-controls="capture-menu"
+              aria-expanded={isCaptureMenuOpen}
+              aria-haspopup="menu"
+              aria-label="Open Capture menu"
+              className="flex h-8 w-8 items-center justify-center bg-ff-primary text-white transition-colors hover:bg-ff-primary-hover focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ff-primary focus-visible:ring-offset-2"
+              onClick={() => setIsCaptureMenuOpen((current) => !current)}
+              ref={captureMenuButtonRef}
+              type="button"
+            >
+              <Icon name="chevron-down" size={17} />
+            </button>
+          </div>
+
+          {isCaptureMenuOpen && (
+            <div
+              aria-label="Capture options"
+              className="absolute right-0 top-10 z-50 w-40 overflow-hidden rounded-[6px] border border-ff-border bg-white py-1 shadow-[0_8px_24px_rgba(31,26,41,0.14)]"
+              id="capture-menu"
+              role="menu"
+            >
+              <button
+                className="flex h-8 w-full items-center gap-2 px-3 text-left text-[12px] font-medium text-ff-text transition-colors hover:bg-ff-muted-surface focus-visible:bg-ff-primary-soft focus-visible:outline-none"
+                onClick={openNewMeeting}
+                role="menuitem"
+                type="button"
+              >
+                <Icon className="text-ff-primary" name="plus" size={15} />
+                New meeting
+              </button>
+              <button
+                className="flex h-8 w-full items-center gap-2 px-3 text-left text-[12px] font-medium text-ff-text transition-colors hover:bg-ff-muted-surface focus-visible:bg-ff-primary-soft focus-visible:outline-none"
+                onClick={openUploads}
+                role="menuitem"
+                type="button"
+              >
+                <Icon className="text-ff-primary" name="upload" size={15} />
+                Upload transcript
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="ml-0.5 flex items-center gap-2 border-l border-ff-border pl-4">

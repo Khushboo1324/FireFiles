@@ -51,12 +51,9 @@ export function UploadsPage() {
 
       <section className="uploads-workspace min-h-0 overflow-y-auto bg-white px-6 py-8 md:px-10">
         <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center">
-          <aside className="mb-9 flex w-full max-w-[910px] items-center justify-center rounded-lg bg-[#fff9e9] px-5 py-3 text-center text-[12px] text-[#4b5263]">
-            <Icon className="mr-2 shrink-0 text-[#a57b28]" name="auto-awesome" size={15} />
-            <p>
-              <strong className="font-semibold text-[#242938]">Import a transcript</strong>
-              {" — "}upload a supported file or paste timestamped text into a meeting.
-            </p>
+          <aside className="mb-9 flex w-full max-w-[910px] items-center justify-center rounded-lg  px-5 py-3 text-center text-[12px] text-[#4b5263]">
+
+
           </aside>
 
           <UploadDropzone

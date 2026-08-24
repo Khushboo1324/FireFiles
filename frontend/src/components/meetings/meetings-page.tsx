@@ -3,12 +3,16 @@ import { AskFireFilesPanel } from "@/components/meetings/ask-firefiles-panel";
 import { MeetingsSidebar } from "@/components/meetings/meetings-sidebar";
 import { MeetingsWorkspace } from "@/components/meetings/meetings-workspace";
 
-export function MeetingsPage() {
+interface MeetingsPageProps {
+  openCreateDialog?: boolean;
+}
+
+export function MeetingsPage({ openCreateDialog = false }: MeetingsPageProps) {
   return (
     <main className="meetings-shell bg-white">
       <GlobalNavRail activeRoute="meetings" />
       <MeetingsSidebar />
-      <MeetingsWorkspace />
+      <MeetingsWorkspace openCreateDialog={openCreateDialog} />
       <AskFireFilesPanel />
     </main>
   );

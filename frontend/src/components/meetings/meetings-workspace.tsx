@@ -20,7 +20,13 @@ interface RequestResult {
   hasError: boolean;
 }
 
-export function MeetingsWorkspace() {
+interface MeetingsWorkspaceProps {
+  openCreateDialog?: boolean;
+}
+
+export function MeetingsWorkspace({
+  openCreateDialog = false,
+}: MeetingsWorkspaceProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [participant, setParticipant] = useState("");
@@ -34,7 +40,7 @@ export function MeetingsWorkspace() {
     hasError: false,
   });
   const [retryVersion, setRetryVersion] = useState(0);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(openCreateDialog);
   const [editingMeetingId, setEditingMeetingId] = useState<number | null>(null);
   const [deletingMeeting, setDeletingMeeting] = useState<MeetingListItem | null>(
     null,
@@ -59,6 +65,13 @@ export function MeetingsWorkspace() {
 
     return () => window.clearTimeout(timeoutId);
   }, [search]);
+
+  useEffect(() => {
+    if (openCreateDialog) {
+      // Consume the cross-page intent so reloads do not reopen the dialog.
+      window.history.replaceState(null, "", "/meetings");
+    }
+  }, [openCreateDialog]);
 
   useEffect(() => {
     let ignoreResult = false;
@@ -160,6 +173,7 @@ export function MeetingsWorkspace() {
   return (
     <>
       <AppHeader
+        onCapture={() => setIsCreating(true)}
         search={{
           value: search,
           onChange: setSearch,
@@ -176,7 +190,6 @@ export function MeetingsWorkspace() {
           onDateFromChange={setDateFrom}
           onDateToChange={setDateTo}
           onParticipantChange={setParticipant}
-          onNewMeeting={() => setIsCreating(true)}
           onSortChange={setSort}
           participant={participant}
           participantOptions={participantOptions}
