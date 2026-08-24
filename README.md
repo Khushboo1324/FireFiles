@@ -432,9 +432,12 @@ The repository does not include browser automation tests.
 - Set `ENV=production` and set `FRONTEND_URL` to the real Vercel origin after the frontend is deployed. Do not include a trailing slash in the origin.
 - Frontend target: Vercel (pending deployment).
 
-## Screenshots
+## Live Deployment
 
-Screenshots will be added before final submission.
+- **Frontend:** https://fire-files.vercel.app
+- **Backend API:** https://firefiles-production.up.railway.app
+- **Swagger / API Docs:** https://firefiles-production.up.railway.app/docs
+
 
 ## Disclaimer
 
