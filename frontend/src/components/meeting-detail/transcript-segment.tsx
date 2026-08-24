@@ -19,7 +19,7 @@ export function TranscriptSegment({
   return (
     <article
       aria-current={isActive ? "true" : undefined}
-      className={`border-b border-ff-border-soft py-4 transition-colors last:border-b-0 ${
+      className={`py-4 transition-colors ${
         isActive
           ? "-mx-4 border-l-2 border-l-ff-primary bg-[#faf8ff] px-[14px]"
           : ""
@@ -40,20 +40,20 @@ export function TranscriptSegment({
               ?
             </span>
           )}
-          <h3 className="truncate text-[11px] font-semibold text-[#39445a]">
+          <h3 className="truncate text-[12px] font-semibold text-[#39445a]">
             {segment.speaker?.name ?? "Unknown speaker"}
           </h3>
         </div>
         <button
           aria-label={`Seek to ${formatTimestamp(segment.start_time_ms)}`}
-          className="shrink-0 rounded text-[10px] font-semibold text-[#6d42d8] underline-offset-2 hover:underline"
+          className="shrink-0 rounded text-[11px] font-semibold text-[#6d42d8] underline-offset-2 hover:underline"
           onClick={() => onSeek(segment.start_time_ms)}
           type="button"
         >
           {formatTimestamp(segment.start_time_ms)}
         </button>
       </div>
-      <p className="pl-7 text-[11px] leading-[18px] text-[#4a566d]">
+      <p className="pl-7 text-[12px] leading-[21px] text-[#4a566d]">
         {matches.map((match, matchPosition) => {
           const previousEnd =
             matchPosition === 0 ? 0 : matches[matchPosition - 1].end;

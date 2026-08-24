@@ -7,6 +7,7 @@ import {
   formatDuration,
   formatMeetingDate,
   formatMeetingTime,
+  formatParticipantNames,
   getInitials,
 } from "@/lib/formatters/meeting";
 
@@ -27,9 +28,10 @@ export function MeetingRow({
   onDelete: () => void;
   onEdit: () => void;
 }) {
-  const participantNames = meeting.participants
-    .map((participant) => participant.name)
-    .join(", ");
+  const allParticipantNames = meeting.participants.map(
+    (participant) => participant.name,
+  );
+  const participantNames = formatParticipantNames(allParticipantNames);
   const meetingInitial = meeting.title.trim().charAt(0).toUpperCase() || "M";
   const tileStyle = tileStyles[meeting.id % tileStyles.length];
 
@@ -50,7 +52,10 @@ export function MeetingRow({
 
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-1.5">
-            <span className="truncate text-[13px] font-semibold text-ff-text">
+            <span
+              className="truncate text-[13px] font-semibold text-ff-text"
+              title={meeting.title}
+            >
               {meeting.title}
             </span>
             <Icon
@@ -59,7 +64,7 @@ export function MeetingRow({
               size={14}
             />
           </span>
-          <span className="mt-1 flex min-w-0 items-center gap-1.5 truncate text-[11px] leading-4 text-ff-muted">
+          <span className="mt-1 flex min-w-0 items-center gap-1.5 truncate text-[12px] leading-4 text-ff-muted">
             <time dateTime={meeting.meeting_date}>
               {formatMeetingDate(meeting.meeting_date)}
             </time>
@@ -70,7 +75,9 @@ export function MeetingRow({
             {participantNames && (
               <>
                 <span aria-hidden="true">·</span>
-                <span className="truncate">{participantNames}</span>
+                <span className="truncate" title={allParticipantNames.join(", ")}>
+                  {participantNames}
+                </span>
               </>
             )}
           </span>

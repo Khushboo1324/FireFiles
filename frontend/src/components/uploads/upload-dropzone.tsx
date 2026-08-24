@@ -53,7 +53,7 @@ export function UploadDropzone({
   }
 
   return (
-    <section aria-labelledby="upload-heading" className="w-full max-w-[1200px]">
+    <section aria-labelledby="upload-heading" className="w-full max-w-[1000px]">
       <input
         accept=".txt,.json,.vtt,text/plain,application/json,text/json,text/vtt"
         aria-label="Choose a TXT, JSON, or VTT transcript"
@@ -68,7 +68,7 @@ export function UploadDropzone({
       <div
         aria-describedby="upload-support upload-error"
         aria-label="Choose or drop a transcript file"
-        className={`flex min-h-[310px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-8 py-12 text-center transition-colors ${
+        className={`flex min-h-[270px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-8 py-10 text-center transition-colors ${
           isDragging
             ? "border-ff-primary bg-ff-primary-soft"
             : "border-[#a988ed] bg-white hover:border-ff-primary hover:bg-[#fcfaff]"
@@ -101,7 +101,7 @@ export function UploadDropzone({
         role="button"
         tabIndex={0}
       >
-        <span className="mb-5 flex size-11 items-center justify-center rounded-full bg-ff-primary-soft text-ff-primary">
+        <span className="mb-4 flex size-11 items-center justify-center rounded-full bg-ff-primary-soft text-ff-primary">
           <Icon name="upload" size={22} />
         </span>
         <h2
@@ -114,7 +114,7 @@ export function UploadDropzone({
           Browse or drag and drop <strong>TXT, JSON, or VTT</strong> files. (Max
           file size: 5 MiB)
         </p>
-        <span className="mt-7 inline-flex h-10 items-center rounded-[5px] bg-ff-primary px-6 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-ff-primary-hover">
+        <span className="mt-6 inline-flex h-10 items-center rounded-[5px] bg-ff-primary px-6 text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-ff-primary-hover">
           Browse Files
         </span>
         <p

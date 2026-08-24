@@ -8,6 +8,7 @@ import {
   formatDuration,
   formatMeetingDate,
   formatMeetingTime,
+  formatParticipantNames,
 } from "@/lib/formatters/meeting";
 
 export function MeetingNotes({
@@ -23,6 +24,10 @@ export function MeetingNotes({
   onNotify: (message: string, tone: "success" | "error") => void;
   onSeekToMs: (milliseconds: number) => void;
 }) {
+  const participantNames = meeting.participants.map(
+    (participant) => participant.name,
+  );
+
   return (
     <section className="meeting-notes-panel relative flex min-h-0 min-w-0 flex-col bg-white">
       <div className="absolute left-1/2 top-3 z-10 flex -translate-x-1/2 rounded-lg bg-[#f2f3f6] p-1">
@@ -60,7 +65,10 @@ export function MeetingNotes({
         <div className="mx-auto max-w-[720px]">
           <div className="mb-7 flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="truncate text-[22px] font-semibold tracking-[-0.02em] text-[#202738]">
+              <h1
+                className="truncate text-[22px] font-semibold tracking-[-0.02em] text-[#202738]"
+                title={meeting.title}
+              >
                 {meeting.title}
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-[#69758b]">
@@ -75,10 +83,11 @@ export function MeetingNotes({
                         />
                       ))}
                     </span>
-                    <span className="max-w-[210px] truncate">
-                      {meeting.participants
-                        .map((participant) => participant.name)
-                        .join(", ")}
+                    <span
+                      className="max-w-[210px] truncate"
+                      title={participantNames.join(", ")}
+                    >
+                      {formatParticipantNames(participantNames)}
                     </span>
                   </span>
                 )}

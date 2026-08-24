@@ -70,6 +70,16 @@ export function getInitials(name: string): string {
   return `${first}${last}`.toUpperCase();
 }
 
+export function formatParticipantNames(
+  names: string[],
+  visibleCount = 2,
+): string {
+  const visibleNames = names.slice(0, visibleCount);
+  const remainingCount = Math.max(0, names.length - visibleNames.length);
+
+  return `${visibleNames.join(", ")}${remainingCount > 0 ? ` +${remainingCount}` : ""}`;
+}
+
 export function formatMeetingGroupLabel(value: Date, now = new Date()): string {
   const day = startOfLocalDay(value);
   const today = startOfLocalDay(now);

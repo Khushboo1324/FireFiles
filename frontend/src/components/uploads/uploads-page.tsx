@@ -38,11 +38,20 @@ export function UploadsPage() {
   return (
     <main className="uploads-shell bg-white">
       <GlobalNavRail activeRoute="uploads" expanded />
-      <AppHeader title="Uploads" />
+      <AppHeader
+        search={{
+          value: "",
+          onChange: () => undefined,
+          placeholder: "Search by title or keyword",
+          disabled: true,
+          title: "Meeting search is available from the Meetings page.",
+        }}
+        title="Uploads"
+      />
 
       <section className="uploads-workspace min-h-0 overflow-y-auto bg-white px-6 py-8 md:px-10">
         <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center">
-          <aside className="mb-9 flex w-full max-w-[1090px] items-center justify-center rounded-lg bg-[#fff9e9] px-5 py-3 text-center text-[12px] text-[#4b5263]">
+          <aside className="mb-9 flex w-full max-w-[910px] items-center justify-center rounded-lg bg-[#fff9e9] px-5 py-3 text-center text-[12px] text-[#4b5263]">
             <Icon className="mr-2 shrink-0 text-[#a57b28]" name="auto-awesome" size={15} />
             <p>
               <strong className="font-semibold text-[#242938]">Import a transcript</strong>
@@ -55,16 +64,13 @@ export function UploadsPage() {
             onPasteRequested={() => setSource({ kind: "paste" })}
           />
 
-          <section className="mt-14 flex flex-col items-center justify-center text-center">
+          <section className="mt-12 flex flex-col items-center justify-center text-center">
             <span className="flex size-12 items-center justify-center rounded-lg border border-[#d8dbe1] bg-[#fafafa] text-[#a8aeb9]">
               <Icon name="download" size={25} />
             </span>
             <h2 className="mt-4 text-[17px] font-semibold text-[#202536]">
               You have no recent uploads!
             </h2>
-            <p className="mt-1 text-[11px] text-ff-muted">
-              Upload history is not included in this demo.
-            </p>
           </section>
         </div>
       </section>

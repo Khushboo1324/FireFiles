@@ -43,6 +43,9 @@ export type IconName =
   | "sparkles"
   | "star"
   | "support"
+  | "task-check"
+  | "thumb-down"
+  | "thumb-up"
   | "upload"
   | "user"
   | "users"
@@ -285,6 +288,26 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M4 21a8 8 0 0 1 16 0" />
       <path d="M3 10v5h3" />
       <path d="M21 10v5h-3" />
+    </>
+  ),
+  "task-check": (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <path d="m8 12 2.5 2.5L16.5 8" />
+    </>
+  ),
+  "thumb-down": (
+    <>
+      <path d="M7 4v11" />
+      <path d="M7 5h8.2a2 2 0 0 1 1.9 1.4l1.6 5A2 2 0 0 1 16.8 14H13l.5 3.1a2.5 2.5 0 0 1-2.5 2.9L7 14.5" />
+      <path d="M3 4h4v11H3Z" />
+    </>
+  ),
+  "thumb-up": (
+    <>
+      <path d="M7 20V9" />
+      <path d="M7 19h8.2a2 2 0 0 0 1.9-1.4l1.6-5A2 2 0 0 0 16.8 10H13l.5-3.1A2.5 2.5 0 0 0 11 4L7 9.5" />
+      <path d="M3 9h4v11H3Z" />
     </>
   ),
   upload: (

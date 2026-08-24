@@ -147,7 +147,9 @@ export function GlobalNavRail({
     <nav
       aria-label="Global navigation"
       className={`global-nav-rail z-40 flex h-full min-h-0 flex-col items-center border-r border-ff-border bg-ff-surface ${
-        expanded ? "w-[240px] max-[860px]:w-14" : "w-14"
+        expanded
+          ? "w-[240px] max-[860px]:w-14"
+          : "w-[var(--ff-meetings-rail-width)]"
       }`}
     >
       <Link

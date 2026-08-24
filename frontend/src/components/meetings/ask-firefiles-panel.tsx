@@ -38,32 +38,27 @@ export function AskFireFilesPanel() {
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-4">
-        <div className="mt-24 flex flex-col items-center text-center">
-          <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-ff-primary-soft text-ff-primary">
-            <Icon name="auto-awesome" size={23} />
-          </div>
-          <h2 className="text-[18px] font-semibold tracking-[-0.01em] text-ff-text">
+        <div className="mt-24 px-2">
+          <Icon className="mb-7 text-[#66dca5]" name="sparkles" size={27} />
+          <h2 className="text-[17px] font-semibold leading-6 tracking-[-0.01em] text-[#344158]">
             Hi there!
+            <span className="block">Get ready for your meeting</span>
           </h2>
-          <p className="mt-1.5 max-w-[235px] text-[13px] leading-5 text-ff-muted">
+          <p className="mt-2 max-w-[300px] text-[12px] leading-5 text-ff-muted">
             AI Q&amp;A is a demo placeholder and is not connected to a model.
           </p>
         </div>
 
-        <div className="mt-auto flex flex-col gap-2 pt-10">
-          <p className="mb-0.5 text-[11px] font-medium text-ff-muted">
-            Try asking about
-          </p>
+        <div className="mt-12 flex flex-col items-start gap-3 px-2">
           {suggestions.map((suggestion) => (
             <button
-              className="flex min-h-8 items-center justify-between rounded-lg border border-ff-border bg-white px-3 text-left text-[12px] text-ff-text disabled:opacity-100"
+              className="flex min-h-9 items-center rounded-lg bg-ff-muted-surface px-3 text-left text-[12px] text-[#465267] disabled:opacity-100"
               disabled
               key={suggestion}
               title={`${suggestion} — coming soon`}
               type="button"
             >
               <span>{suggestion}</span>
-              <Icon className="text-ff-muted" name="arrow-right" size={15} />
             </button>
           ))}
         </div>

@@ -78,14 +78,20 @@ export function TranscriptPanel({
     previousActiveSegmentId.current = activeSegmentId;
     previousSeekRequestId.current = seekRequestId;
 
-    if (!activeSegmentChanged || (!isPlaying && !userSought)) {
+    // While find-in-transcript is active, its current match owns scroll position;
+    // playback highlighting should not pull the reader to a different segment.
+    if (
+      query.trim() ||
+      !activeSegmentChanged ||
+      (!isPlaying && !userSought)
+    ) {
       return;
     }
 
     document
       .getElementById(`transcript-segment-${activeSegmentId}`)
       ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [activeSegmentId, isPlaying, seekRequestId]);
+  }, [activeSegmentId, isPlaying, query, seekRequestId]);
 
   function moveMatch(direction: 1 | -1) {
     if (matches.length === 0) {
@@ -109,7 +115,7 @@ export function TranscriptPanel({
       >
         <button
           aria-selected="false"
-          className="flex h-full items-center gap-1.5 border-b-2 border-transparent px-3 text-[11px] font-medium text-[#778196] disabled:opacity-100"
+          className="flex h-full items-center gap-1.5 border-b-2 border-transparent px-3 text-[12px] font-medium text-[#778196] disabled:opacity-100"
           disabled
           role="tab"
           title="Ask FireFiles — available in an upcoming step"
@@ -120,7 +126,7 @@ export function TranscriptPanel({
         </button>
         <button
           aria-selected="true"
-          className="flex h-full items-center border-b-2 border-ff-primary px-3 text-[11px] font-semibold text-ff-primary"
+          className="flex h-full items-center border-b-2 border-ff-primary px-3 text-[12px] font-semibold text-ff-primary"
           role="tab"
           type="button"
         >

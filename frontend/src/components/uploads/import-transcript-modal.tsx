@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
 
+import { Dialog } from "@/components/ui/dialog";
 import { MeetingSelector } from "@/components/uploads/meeting-selector";
 import {
   NewMeetingForm,
@@ -122,7 +123,6 @@ export function ImportTranscriptModal({
   onOpenMeeting: (meetingId: number) => void;
   onSuccess: (meetingId: number) => void;
 }) {
-  const dialogRef = useRef<HTMLDivElement>(null);
   const [workflow, setWorkflow] = useState<Workflow>("existing");
   const [selectedMeetingId, setSelectedMeetingId] = useState<number | null>(null);
   const [meetingDraft, setMeetingDraft] = useState(initialMeetingDraft);
@@ -134,47 +134,6 @@ export function ImportTranscriptModal({
   const [pendingStage, setPendingStage] = useState<PendingStage>(null);
   const [conflictMeetingId, setConflictMeetingId] = useState<number | null>(null);
   const [createdMeetingId, setCreatedMeetingId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (
-        event.key === "Escape" &&
-        dialogRef.current?.dataset.pending !== "true"
-      ) {
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab" || !dialogRef.current) {
-        return;
-      }
-
-      const focusable = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
-        ),
-      );
-      if (focusable.length === 0) {
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      previouslyFocused?.focus();
-    };
-  }, [onClose]);
 
   const fileDetails = useMemo(() => {
     if (source.kind !== "file") {
@@ -198,9 +157,10 @@ export function ImportTranscriptModal({
     setPendingStage("importing");
     setError(null);
     setConflictMeetingId(null);
+    let succeeded = false;
     try {
       await importIntoMeeting(meetingId, replaceExisting);
-      onSuccess(meetingId);
+      succeeded = true;
     } catch (importError) {
       if (importError instanceof ApiError && importError.status === 409) {
         setConflictMeetingId(meetingId);
@@ -209,6 +169,9 @@ export function ImportTranscriptModal({
       }
     } finally {
       setPendingStage(null);
+    }
+    if (succeeded) {
+      onSuccess(meetingId);
     }
   }
 
@@ -260,9 +223,10 @@ export function ImportTranscriptModal({
     }
 
     setPendingStage("importing");
+    let importSucceeded = false;
     try {
       await importIntoMeeting(newMeetingId, false);
-      onSuccess(newMeetingId);
+      importSucceeded = true;
     } catch (importError) {
       if (importError instanceof ApiError && importError.status === 409) {
         setConflictMeetingId(newMeetingId);
@@ -271,6 +235,9 @@ export function ImportTranscriptModal({
       }
     } finally {
       setPendingStage(null);
+    }
+    if (importSucceeded) {
+      onSuccess(newMeetingId);
     }
   }
 
@@ -286,23 +253,13 @@ export function ImportTranscriptModal({
           : "Import Transcript";
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#171324]/35 p-4 backdrop-blur-[1px]"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget && pendingStage === null) {
-          onClose();
-        }
-      }}
+    <Dialog
+      busy={pendingStage !== null}
+      maxWidthClass="max-w-[590px]"
+      onClose={onClose}
+      titleId="import-transcript-title"
     >
-      <div
-        aria-labelledby="import-transcript-title"
-        aria-modal="true"
-        className="flex max-h-[90dvh] w-full max-w-[590px] flex-col overflow-hidden rounded-xl border border-ff-border bg-white shadow-[0_18px_55px_rgba(40,24,74,0.2)]"
-        data-pending={pendingStage !== null}
-        ref={dialogRef}
-        role="dialog"
-        tabIndex={-1}
-      >
+      <>
         <div className="flex shrink-0 items-start justify-between border-b border-ff-border px-5 py-4">
           <div>
             <h2
@@ -317,8 +274,8 @@ export function ImportTranscriptModal({
           </div>
           <button
             aria-label="Close import transcript dialog"
-            autoFocus
             className="flex size-8 items-center justify-center rounded-md text-ff-muted transition-colors hover:bg-ff-muted-surface hover:text-ff-text disabled:opacity-40"
+            data-autofocus
             disabled={pendingStage !== null}
             onClick={onClose}
             type="button"
@@ -520,7 +477,7 @@ export function ImportTranscriptModal({
             </div>
           )}
         </form>
-      </div>
-    </div>
+      </>
+    </Dialog>
   );
 }

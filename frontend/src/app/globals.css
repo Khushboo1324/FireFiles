@@ -14,6 +14,12 @@
   --ff-primary-soft: #f3efff;
   --ff-error: #ef4444;
   --ff-avatar: #00584f;
+  --ff-meetings-rail-width: 60px;
+  --ff-meetings-sidebar-width: 250px;
+  --ff-meetings-assistant-width: 500px;
+  --ff-detail-rail-width: 46px;
+  --ff-detail-search-width: 340px;
+  --ff-detail-transcript-width: 430px;
   --background: var(--ff-background);
   --foreground: var(--ff-text);
 }
@@ -40,7 +46,9 @@
 
 .meetings-shell {
   display: grid;
-  grid-template-columns: 56px 220px minmax(0, 1fr) 330px;
+  grid-template-columns:
+    var(--ff-meetings-rail-width) var(--ff-meetings-sidebar-width)
+    minmax(0, 1fr) var(--ff-meetings-assistant-width);
   grid-template-rows: 56px minmax(0, 1fr);
   height: 100dvh;
   min-height: 0;
@@ -122,8 +130,10 @@
 
 .meeting-detail-shell {
   display: grid;
-  grid-template-columns: 42px 270px minmax(440px, 1fr) 375px;
-  grid-template-rows: 58px minmax(0, 1fr) 68px;
+  grid-template-columns:
+    var(--ff-detail-rail-width) var(--ff-detail-search-width)
+    minmax(0, 1fr) var(--ff-detail-transcript-width);
+  grid-template-rows: 58px minmax(0, 1fr) 70px;
   height: 100dvh;
   min-height: 0;
   width: 100%;
@@ -208,13 +218,13 @@
 
 @media (max-width: 1200px) {
   .meeting-detail-shell {
-    grid-template-columns: 42px 240px minmax(400px, 1fr) 340px;
+    grid-template-columns: 46px 300px minmax(400px, 1fr) 400px;
   }
 }
 
 @media (max-width: 1040px) {
   .meeting-detail-shell {
-    grid-template-columns: 42px 0 minmax(360px, 1fr) 340px;
+    grid-template-columns: 46px 0 minmax(360px, 1fr) 380px;
   }
 
   .meeting-smart-panel {
@@ -224,7 +234,7 @@
 
 @media (max-width: 780px) {
   .meeting-detail-shell {
-    grid-template-columns: 42px 0 minmax(0, 1fr) 0;
+    grid-template-columns: 46px 0 minmax(0, 1fr) 0;
   }
 
   .meeting-transcript-panel {
@@ -234,7 +244,9 @@
 
 @media (max-width: 1200px) {
   .meetings-shell {
-    grid-template-columns: 56px 220px minmax(0, 1fr);
+    grid-template-columns:
+      var(--ff-meetings-rail-width) var(--ff-meetings-sidebar-width)
+      minmax(0, 1fr);
   }
 
   .app-header {
@@ -248,7 +260,7 @@
 
 @media (max-width: 860px) {
   .meetings-shell {
-    grid-template-columns: 56px minmax(0, 1fr);
+    grid-template-columns: var(--ff-meetings-rail-width) minmax(0, 1fr);
   }
 
   .meetings-secondary-sidebar {

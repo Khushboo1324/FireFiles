@@ -149,17 +149,6 @@ export function MeetingPlayer({
           >
             <Icon className="-scale-x-100" name="history" size={20} />
           </PlayerButton>
-        </div>
-
-        <div className="flex items-center justify-end gap-3 text-[#657087]">
-          <PlayerButton
-            className="max-[900px]:hidden"
-            disabled
-            label="Favorite meeting"
-            title="Favorite is not available yet"
-          >
-            <Icon name="star" size={18} />
-          </PlayerButton>
           {mediaUrl ? (
             <a
               aria-label="Download recording"
@@ -179,13 +168,40 @@ export function MeetingPlayer({
               <Icon name="download" size={19} />
             </PlayerButton>
           )}
+        </div>
+
+        <div className="flex items-center justify-end gap-2 text-[#657087]">
           <PlayerButton
             className="max-[900px]:hidden"
             disabled
-            label="More player options"
-            title="More player options are not available yet"
+            label="Favorite meeting"
+            title="Favorite is not available yet"
           >
-            <Icon name="more-horizontal" size={18} />
+            <Icon name="star" size={18} />
+          </PlayerButton>
+          <PlayerButton
+            className="max-[900px]:hidden"
+            disabled
+            label="Mark meeting reviewed"
+            title="Meeting review is not available yet"
+          >
+            <Icon name="task-check" size={18} />
+          </PlayerButton>
+          <PlayerButton
+            className="max-[900px]:hidden"
+            disabled
+            label="Like meeting"
+            title="Meeting feedback is not available yet"
+          >
+            <Icon name="thumb-up" size={18} />
+          </PlayerButton>
+          <PlayerButton
+            className="max-[900px]:hidden"
+            disabled
+            label="Dislike meeting"
+            title="Meeting feedback is not available yet"
+          >
+            <Icon name="thumb-down" size={18} />
           </PlayerButton>
         </div>
       </div>

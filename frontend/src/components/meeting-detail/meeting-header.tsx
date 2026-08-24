@@ -39,7 +39,10 @@ export function MeetingHeader({
           {isLoading ? (
             <span className="h-4 w-36 animate-pulse rounded bg-ff-border-soft" />
           ) : (
-            <span className="max-w-[42vw] truncate font-medium text-ff-text">
+            <span
+              className="max-w-[42vw] truncate font-medium text-ff-text"
+              title={title}
+            >
               {title}
             </span>
           )}
